@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PickupContextMixin",
+    "MagnetUpgradeWrapperAccessor",
+    "BackpackFluidCapabilityMixin",
+    "AlchemyDefinitionsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

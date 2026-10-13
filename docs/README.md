@@ -1,0 +1,16 @@
+# Documentação
+
+- [PRD do MVP](PRD.md) — requisitos, conectividade e critérios de aceitação para depósitos de mochila em sistemas de storage digital.
+- [Arquitetura implementada](ARCHITECTURE.md) — responsabilidades compartilhadas, contratos, proteções e estado atual da integração.
+- [Planos dos upgrades universais](UPGRADES.md) — premissas aprovadas, contratos, sequência e critérios de validação dos oito upgrades.
+
+## Planos por upgrade
+
+- [Deposit](upgrades/DEPOSIT.md) — consolidação do depósito manual existente.
+- [Restock](upgrades/RESTOCK.md) — abastecimento manual da mochila pela rede.
+- [Pickup](upgrades/PICKUP.md) — encaminhamento da coleta normal.
+- [Magnet](upgrades/MAGNET.md) — coleta de drops próximos.
+- [Refill](upgrades/REFILL.md) — reposição automática de slots do portador.
+- [Feeding](upgrades/FEEDING.md) — alimentação automática do portador.
+- [Alchemy](upgrades/ALCHEMY.md) — consumíveis condicionais para o portador.
+- [Pump](upgrades/PUMP.md) — transferência de fluidos com suporte por capacidade.

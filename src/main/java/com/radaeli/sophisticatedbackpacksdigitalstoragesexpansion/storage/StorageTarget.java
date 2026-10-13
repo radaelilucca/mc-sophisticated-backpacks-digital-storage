@@ -1,0 +1,55 @@
+package com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.storage;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.IItemHandler;
+import java.util.List;
+import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.storage.StorageOperation;
+
+public interface StorageTarget {
+    StorageEndpoint endpoint();
+
+    boolean isReachable(ServerPlayer player, SourceLocation source);
+
+    IItemHandler getAvailableItems(ServerPlayer player);
+
+    int simulateInsert(ItemStack stack, ServerPlayer player);
+
+    ItemStack insert(ItemStack stack, ServerPlayer player);
+
+    default boolean canAccess(ServerPlayer player, SourceLocation source, StorageOperation operation) {
+        return isReachable(player, source);
+    }
+
+    default List<StoredItemAmount> getAvailableItemAmounts(ServerPlayer player) {
+        var items = new java.util.ArrayList<StoredItemAmount>();
+        IItemHandler snapshot = getAvailableItems(player);
+        for (int slot = 0; slot < snapshot.getSlots(); slot++) {
+            ItemStack stack = snapshot.getStackInSlot(slot);
+            if (!stack.isEmpty()) items.add(new StoredItemAmount(stack.copyWithCount(1), stack.getCount()));
+        }
+        return List.copyOf(items);
+    }
+
+    default int simulateExtract(ItemStack stack, int amount, ServerPlayer player) {
+        return 0;
+    }
+
+    default ItemStack extract(ItemStack stack, int amount, ServerPlayer player) {
+        return ItemStack.EMPTY;
+    }
+
+    default ItemInsertion insertionFor(ServerPlayer player) {
+        return new ItemInsertion() {
+            @Override
+            public int simulateInsert(ItemStack stack) {
+                return StorageTarget.this.simulateInsert(stack, player);
+            }
+
+            @Override
+            public ItemStack insert(ItemStack stack) {
+                return StorageTarget.this.insert(stack, player);
+            }
+        };
+    }
+}
