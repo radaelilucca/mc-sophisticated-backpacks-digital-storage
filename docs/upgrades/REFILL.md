@@ -12,11 +12,13 @@ Expor a seleção de destinos do Refill avançado nativo, incluindo os slots de 
 
 ## 3. Estado atual e dependências
 
-**Implementação atual (2026-10-12):** serviço por slot-alvo, filtro nativo, prioridade e callback de seleção de bloco estão registrados. A extração usa a camada compartilhada e tenta devolver itens não aceitos. Sua textura 16×16 parte do ícone avançado original e usa a paleta remota do Magnet; o modelo aponta para o asset local. Compilação e início do cliente passaram; aparência em jogo, destinos, seleção de bloco e recuperação exigem validação manual.
+**Implementação atual (2026-10-15):** serviço por slot-alvo, filtro nativo, prioridade e callback de seleção de bloco estão registrados. A extração usa a camada compartilhada e tenta devolver itens não aceitos. Forge 1.20.1 e NeoForge 1.21.1 usam o controle visual do Refill original: grade nativa de filtros, sigla verde no canto de cada filtro ocupado e seleção de destino pelo scroll. A tooltip mantém o nome do item e acrescenta o modo atual e a instrução de scroll com as traduções nativas do Sophisticated Backpacks. Remover um filtro volta seu destino para `ANY`. A geometria da grade continua na posição nativa (`x + 3`, `y + 24`) e o rodapé é posicionado a partir da altura real do controle. Compilação dos dois loaders passou; validação visual e funcional em jogo continua necessária.
 
 **Verificado:** Backpacks fornece `RefillUpgradeWrapper.TargetSlot`, seus codecs e controles de seleção. Refill nativo implementa `ITickableUpgrade`, `IFilteredUpgrade` e `IBlockPickResponseUpgrade`. Parte das rotinas de preenchimento é privada.
 
-**GUI compacta (P02/P06):** a grade de seletores de destino fica à direita da grade nativa de itens, na mesma ordem de linhas e colunas. Os botões de 12 px têm 2 px de intervalo horizontal; cada modo mostra `A` para Any, `M` para mão principal, `O` para mão secundária ou `1`–`9` para a hotbar. Tooltips nativos e configurações persistidas são preservados; prioridade e vínculo ficam logo abaixo das grades.
+**GUI nativa (P02/P06):** reutilizar o `FilterLogicControl` e seus slots. Não criar botões adicionais. Para cada filtro ocupado, desenhar o acrônimo de `TargetSlot` em verde na posição nativa dentro do slot. O scroll avança/retrocede entre `ANY`, mãos e posições da hotbar; cada passo atualiza o wrapper local e envia a configuração pelo container Sophisticated. Prioridade e vínculo continuam abaixo da grade.
+
+**Correção da GUI (P06/P11/P12):** os relatos em jogo demonstraram que usar `Slot.x/y` para desenhar e detectar hover misturava coordenadas relativas ao menu com coordenadas da tela. Indicador e hit test agora compartilham `FilterSlotGrid`, construído a partir da origem absoluta do controle e de seu `slotsTopYOffset`. A tooltip usa `ItemTooltipEvent`, como o Refill original: acrescenta destino e instrução de scroll ao tooltip normal do item, restrita à tela, à aba aberta e ao filtro sob o cursor. A referência à aba é fraca e é limpa no fechamento; nenhuma tooltip adicional é desenhada sobre a vanilla. Os testes comuns reproduzem o menu deslocado, os nove slots, bordas e áreas externas. Testes comuns e compilação dos dois loaders passaram; comparação visual e interação em jogo após esta correção permanecem pendentes.
 
 **Proposto:** serviço de obtenção por identidade/quantidade sobre `ItemExtraction` e fonte local, reutilizando contratos e recuperação do [Restock](RESTOCK.md). `TargetSlot` é um tipo existente; o serviço remoto é novo. Preservar semântica pública das seleções, sem assumir acesso a métodos privados de preenchimento.
 
@@ -47,7 +49,7 @@ Não consumir reservas de Feeding/Alchemy e não retirar recursos de slots de up
 ## 7. Etapas de entrega
 
 - [ ] Implementar obtenção por identidade e déficit; gate: quantidades extraídas nunca excedem espaço planejado.
-- [ ] Adaptar configurações/controles de `TargetSlot`; gate: todas as seleções expostas persistem e funcionam.
+- [ ] Adaptar configurações/controles de `TargetSlot`; implementação, regressão de coordenadas e compilação presentes. Gate: confirmar indicador, tooltip, scroll nas duas direções e reabertura em Forge/NeoForge dentro do jogo.
 - [ ] Implementar seleção de bloco; gate: inventário cheio e seleção anterior preservados conforme regras nativas.
 - [ ] Registrar item e regressão; gate: nenhum abastecimento de jogador próximo ou mochila colocada.
 

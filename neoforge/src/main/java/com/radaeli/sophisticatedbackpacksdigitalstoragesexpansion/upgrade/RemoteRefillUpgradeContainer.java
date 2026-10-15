@@ -29,6 +29,10 @@ public final class RemoteRefillUpgradeContainer
     }
 
     public void setTargetSlot(int filterSlot, TargetSlot targetSlot) {
+        if (filterSlot < 0 || filterSlot >= FILTER_COUNT || targetSlot == null) {
+            return;
+        }
+        upgradeWrapper.setTargetSlot(filterSlot, targetSlot);
         sendDataToServer(() -> {
             CompoundTag data = new CompoundTag();
             data.putInt(DATA_TARGET_SLOT_INDEX, filterSlot);

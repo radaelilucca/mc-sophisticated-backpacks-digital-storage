@@ -1,6 +1,7 @@
 package com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.client;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -19,6 +20,7 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            MinecraftForge.EVENT_BUS.addListener(RemoteRefillUpgradeTab::appendTargetSlotTooltip);
             UpgradeGuiManager.registerTab(RemoteDepositUpgradeRegistration.CONTAINER_TYPE, RemoteDepositUpgradeTab::new);
             UpgradeGuiManager.registerTab(RemoteRestockUpgradeRegistration.CONTAINER_TYPE, RemoteRestockUpgradeTab::new);
             UpgradeGuiManager.registerTab(RemoteUpgradeRegistrations.PICKUP, RemotePickupUpgradeTab::new);

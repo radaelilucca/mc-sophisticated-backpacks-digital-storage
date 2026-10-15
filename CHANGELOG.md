@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0] - 2026-10-15
+
+### Added
+
+- Forge support for Minecraft 1.20.1, including all eight remote storage upgrades.
+
+### Changed
+
+- Remote Refill now uses the native Sophisticated filter grid, with the selected target shown on each filter and changed by scrolling.
+
+### Fixed
+
+- Refill target indicators now render inside the correct filter slots, and tooltips show the current target and scroll instructions in Forge and NeoForge.
+
 ## [0.1.0] - 2026-10-12
 
 ### Added

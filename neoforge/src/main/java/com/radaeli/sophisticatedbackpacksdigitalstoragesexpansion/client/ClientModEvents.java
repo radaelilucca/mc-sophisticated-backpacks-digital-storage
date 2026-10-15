@@ -4,6 +4,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeGuiManager;
 
 import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.SophisticatedBackpacksDigitalStoragesExpansion;
@@ -19,6 +20,7 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            NeoForge.EVENT_BUS.addListener(RemoteRefillUpgradeTab::appendTargetSlotTooltip);
             UpgradeGuiManager.registerTab(RemoteDepositUpgradeRegistration.CONTAINER_TYPE, RemoteDepositUpgradeTab::new);
             UpgradeGuiManager.registerTab(RemoteRestockUpgradeRegistration.CONTAINER_TYPE, RemoteRestockUpgradeTab::new);
             UpgradeGuiManager.registerTab(RemoteUpgradeRegistrations.PICKUP, RemotePickupUpgradeTab::new);

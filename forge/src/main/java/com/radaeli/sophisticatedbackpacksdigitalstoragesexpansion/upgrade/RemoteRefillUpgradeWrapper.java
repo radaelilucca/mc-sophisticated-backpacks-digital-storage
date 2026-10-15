@@ -26,6 +26,12 @@ public final class RemoteRefillUpgradeWrapper extends PriorityLinkedStorageUpgra
     public RemoteRefillUpgradeWrapper(IStorageWrapper storageWrapper, ItemStack upgrade, Consumer<ItemStack> saveHandler) {
         super(storageWrapper, upgrade, saveHandler);
         filterLogic = new FilterLogic(upgrade, saveHandler, FILTER_SLOT_COUNT);
+        filterLogic.getFilterHandler().setOnSlotChange(slot -> {
+            if (filterLogic.getFilterHandler().getStackInSlot(slot).isEmpty()
+                    || !getTargetSlots().containsKey(slot)) {
+                setTargetSlot(slot, TargetSlot.ANY);
+            }
+        });
     }
 
     @Override
