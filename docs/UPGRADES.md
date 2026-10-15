@@ -4,6 +4,8 @@
 
 Este documento consolida as decisões aprovadas e os critérios dos oito upgrades. Deposit foi consolidado a partir da POC; os outros sete upgrades, contratos de extração e fluidos, registros, receitas e interfaces foram implementados no código. `compileJava processResources` e a inicialização do cliente com os três backends passaram. Isso não substitui a validação manual por função/backend; os checklists abaixo permanecem como critérios, sem marcar interações de jogo como concluídas.
 
+O módulo Forge 1.20.1 agora também contém os oito upgrades e os adaptadores específicos dos JARs auditados. `:forge:build` passa e produz JAR reobfuscado. A suíte Forge ainda não cobre redes reais nem inicia registries do jogo em GameTests; veja a evidência e os limites atualizados em [MULTILOADER.md](MULTILOADER.md).
+
 A [arquitetura atual](ARCHITECTURE.md) descreve a base existente. O [PRD](PRD.md) permanece como registro do MVP original. Em caso de diferença de escopo, este documento e os planos individuais definem a evolução posterior ao MVP.
 
 ## Catálogo e planos individuais
@@ -30,7 +32,7 @@ As âncoras explícitas `P01` a `P12` são referências estáveis. Os planos ind
 <a id="P01"></a>
 ### P01 — Plataforma e dependências
 
-Minecraft 1.21.1, NeoForge 21.1.236 e Java 21; pacote base `com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion`. Sophisticated Core e Backpacks são obrigatórios; os backends são opcionais e suas classes permanecem isoladas nos adaptadores. O ID do mod é `sophisticated_backpacks_digital_storages_expansion`; os IDs persistidos de itens e receitas mantêm o namespace anterior para compatibilidade.
+NeoForge: Minecraft 1.21.1, NeoForge 21.1.236 e Java 21. Forge: Minecraft 1.20.1, Forge 47.4.10 e Java 17. O pacote base é `com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion`. Sophisticated Core e Backpacks são obrigatórios; os backends são opcionais e suas classes permanecem isoladas nos adaptadores. O ID do mod é `sophisticated_backpacks_digital_storages_expansion`; os IDs persistidos de itens e receitas mantêm o namespace anterior para compatibilidade dentro de cada versão de Minecraft. As implementações e os gates de runtime por plataforma estão em [MULTILOADER.md](MULTILOADER.md); build aprovado não declara os cenários de jogo concluídos.
 
 JARs auditados no workspace: Core `1.5.1.2341`, Backpacks `3.26.3.2158`, AE2 `19.2.18`, RS `2.0.9`, Tom’s `2.4.2`. Mudanças de versão exigem nova conferência das assinaturas e dos pontos de Mixin.
 
@@ -57,7 +59,7 @@ AE2 usa o access point vinculado; RS usa o controller e seus validadores; Tom’
 
 Toda mutação ocorre no servidor. Contexto de GUI valida menu, aba e wrapper instalado; contexto de tick vem do callback nativo; contexto de coleta vem do processamento original de pickup.
 
-Revalidar instalação e habilitação antes de executar. Automação pausa sem `ServerPlayer` válido no contexto. Não persistir dono para acesso offline nem reutilizar o último jogador que abriu a mochila. Feeding, Refill e Alchemy atuam somente no portador. Para mochilas colocadas, Deposit e Restock funcionam pela GUI. Pump resolve o contexto no tick: usa o portador ou, quando o callback não fornece jogador, o jogador real elegível mais próximo dentro da caixa da mochila expandida em três blocos, seguindo o alcance nativo de interação com mãos. Exclui jogadores falsos, mortos e espectadores e valida interação com o bloco. Sem esse contexto, Pump pausa; a posição usada para alcance da rede continua sendo a da mochila colocada. Os demais upgrades automáticos continuam exigindo jogador no callback.
+Revalidar instalação e habilitação antes de executar. Automação remota pausa sem `ServerPlayer` válido no contexto. Não persistir dono para acesso offline nem reutilizar o último jogador que abriu a mochila. Feeding, Refill e Alchemy atuam somente no portador. Para mochilas colocadas, Deposit e Restock funcionam pela GUI. Pump e Magnet resolvem o contexto no tick: usam o portador ou, quando o callback não fornece jogador, o jogador real elegível mais próximo dentro da caixa da mochila expandida em três blocos. Excluem jogadores falsos, mortos e espectadores e validam interação com o bloco. Sem esse contexto, a operação remota pausa; a posição usada para alcance da rede continua sendo a da mochila colocada. Pickup continua exigindo jogador no callback.
 
 <a id="P05"></a>
 ### P05 — Prioridade e fallback

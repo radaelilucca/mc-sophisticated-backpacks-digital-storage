@@ -2,6 +2,7 @@
 build/
 runs/
 libs/*.jar
+libs/forge/*.jar
 .idea/
 *.iml
 out/

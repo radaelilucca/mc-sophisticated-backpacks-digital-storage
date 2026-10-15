@@ -32,28 +32,40 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.RELEASE_TAG }}
+      - uses: gradle/actions/setup-gradle@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
-      - name: Validate tag and build
+          java-version: '17'
+      - name: Validate tag and build Forge 1.20.1
         shell: bash
         run: |
           set -euo pipefail
           [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
           chmod +x ./gradlew
-          ./gradlew -Pmod_version="${RELEASE_TAG#v}" build --no-daemon --no-parallel --console=plain
-      - name: Collect release JAR
+          ./gradlew -Pmod_version="${RELEASE_TAG#v}" :common:check :forge:build --no-daemon --no-parallel --console=plain
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build NeoForge 1.21.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew -Pmod_version="${RELEASE_TAG#v}" :neoforge:build --no-daemon --no-parallel --console=plain
+      - name: Collect Forge and NeoForge JARs
         shell: bash
         run: |
           set -euo pipefail
           version="${RELEASE_TAG#v}"
           mod_id="$(sed -nE 's/^mod_id=([^[:space:]]+)$/\1/p' gradle.properties)"
           mkdir -p release-artifacts
-          mapfile -t jars < <(find build/libs -maxdepth 1 -type f -name "*-${version}.jar" ! -name '*-sources.jar' -print)
-          test "${#jars[@]}" -eq 1
-          cp "${jars[0]}" "release-artifacts/${mod_id}-${version}-neoforge.jar"
+          for loader in forge neoforge; do
+            mapfile -t jars < <(find "$loader/build/libs" -maxdepth 1 -type f -name "*-${version}.jar" ! -name '*-sources.jar' -print)
+            test "${#jars[@]}" -eq 1
+            cp "${jars[0]}" "release-artifacts/${mod_id}-${version}-${loader}.jar"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: sophisticated-backpack-is-addon-${{ env.RELEASE_TAG }}

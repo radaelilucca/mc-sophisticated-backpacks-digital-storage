@@ -2,13 +2,17 @@
 
 ## Escopo
 
-Minecraft 1.21.1, NeoForge 21.1.236 e Java 21. O mod se chama **Sophisticated Backpacks - Digital Storages Expansion**, com ID `sophisticated_backpacks_digital_storages_expansion` e pacote Java `com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion`. Itens e receitas usam esse mesmo namespace. Os oito upgrades têm item, ciclo de vida, container e aba registrados. A implementação compila e o cliente de desenvolvimento inicializa; cenários funcionais em jogo ainda aguardam validação manual.
+O projeto suporta Minecraft 1.21.1/NeoForge 21.1.236/Java 21 e Minecraft 1.20.1/Forge 47.4.10/Java 17. O mod se chama **Sophisticated Backpacks - Digital Storages Expansion**, com ID `sophisticated_backpacks_digital_storages_expansion` e pacote Java `com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion`. Itens e receitas usam esse mesmo namespace. Os oito upgrades têm implementações específicas para as duas plataformas. Forge compila e produz um JAR reobfuscado; integração operacional completa ainda aguarda validação em jogo.
 
 Os oito upgrades aparecem em uma aba criativa própria. A tooltip base do Sophisticated usa `item.<namespace>.<item>.tooltip`; essa chave está presente em inglês e português para cada upgrade, além das descrições das abas do Sophisticated.
 
 A hierarquia compartilhada das tooltips segue [P02](UPGRADES.md#P02): nome nativo → descrição em `GRAY` → status em `DARK_GRAY`, destacando somente o backend vinculado em `GREEN` → instrução de desvínculo em `DARK_GRAY`, somente se houver vínculo. `LinkedStorageUpgradeItem` preserva as linhas traduzidas pelo Sophisticated e aplica essa apresentação aos oito itens em EN-US/PT-BR. `StorageText.tooltipSummary` estiliza o resumo do item; o resumo das abas permanece independente. Pump acrescenta seu aviso de fluido pendente ao status por `getLinkStatus`, antes da instrução. Endereço avançado usa `DARK_GRAY`; nenhuma rede é resolvida para montar a tooltip.
 
 Cada função tem seu próprio item universal, configurado manualmente para um endpoint de AE2, Refined Storage ou Tom’s. Os serviços cobrem inserção, extração, pickup, magnetismo, reposição, alimentação, alquimia e bombeamento de fluidos AE2/RS. Tom’s continua sem capacidade de fluidos.
+
+## Estrutura multiloader
+
+O build usa `common`, `neoforge` e `forge`. `common` tem Java 17 sem dependências de Minecraft e suas fontes são incorporadas nos dois artefatos. O código com tipos Minecraft é compilado separadamente no loader correspondente; não existe binário de Minecraft compartilhado entre 1.20.1 e 1.21.1. O estado e os limites de validação do Forge estão em [MULTILOADER.md](MULTILOADER.md).
 
 ## Responsabilidades
 
@@ -31,8 +35,8 @@ Cada função tem seu próprio item universal, configurado manualmente para um e
 | `StorageTransferGuard` / `TransferInputFilter` | Bloqueio temporário de entrada externa na origem através de `IIOFilterUpgrade`, evitando que a rede deposite de volta na mesma mochila. |
 | `DepositService` | Orquestração específica do depósito, reutilizando `DepositFilterLogic` e os serviços comuns. |
 | `RestockService` / `UpgradeItemSources` | Extração de rede e mochila, com retorno de sobras; a segunda baseia-se em identidades e quantidades consultadas a cada operação. |
-| Serviços Pickup/Magnet/Refill/Feeding/Alchemy | Roteamento por prioridade; automações exigem portador jogador e revalidam wrapper instalado/habilitado. Feeding e Alchemy guardam consumíveis em reservas do item. |
-| `PumpService` / `PumpReservation` | Contexto do portador ou jogador próximo à mochila colocada, alvos nativos e reserva persistida de até 1.000 mB; Tom’s pausa a função. |
+| Serviços Pickup/Magnet/Refill/Feeding/Alchemy | Roteamento por prioridade; automações de portador revalidam wrapper instalado/habilitado. Magnet também aceita o tick colocado com jogador elegível próximo e aplica a exceção nativa `AllowMachineRemoteMovement`; Refill `ANY` completa pilhas compatíveis antes de ocupar slots vazios. Feeding e Alchemy guardam consumíveis em reservas do item. |
+| `PumpService` / `PumpReservation` | Contexto do portador ou jogador próximo à mochila colocada, alvos nativos e reserva persistida de até 1.000 mB; recupera reservas pendentes mesmo com Pump desativado e não inicia novas transferências nesse estado; Tom’s pausa a função. |
 | `PumpStorageRouter` / `PumpTransferService` | Prioridade por operação, complemento parcial entre rede/tanque, seleção por fluido/componentes, simulação e recuperação. |
 | `StorageTransferGuard` / `FluidTransferGuard` / `GuardedFluidHandler` | Escopos aninháveis de proteção de entrada/saída; o Mixin envolve a capability externa e verifica o bloqueio em cada chamada, inclusive em referências já em cache. |
 
@@ -83,15 +87,17 @@ Adaptadores devem devolver sobras válidas do mesmo item e componentes e não al
 | Deposit | Ação pela GUI, filtros nativos, recuperação e conflito com Deposit Sophisticated. | Regressão após refatoração em AE2, RS e Tom’s. |
 | Restock | Extração por identidade, filtros, capacidade e recuperação. Reutiliza `DepositFilterLogic` com modo de inventário, não o `ContentsFilterLogic` descrito inicialmente no plano. | Conteúdo filtrado, quantidades parciais e filtros GUI. |
 | Pickup | Contexto de coleta original delimitado por MixinExtras e serviço de roteamento com retorno de sobra. | Coleta real, prioridades, mochilas múltiplas e conexão. |
-| Magnet | Raio do Magnet avançado Sophisticated, bloqueadores nativos via accessor e atualização parcial de entidades. | Elegibilidade, coexistência com Pickup e alcance em mundo. |
-| Refill | Regras por filtro/slot-alvo e seleção de bloco com extração e tentativa de recuperação. | Mãos, toolbar, seleção, slot modificado e limites de inventário. |
+| Magnet | Raio do Magnet avançado Sophisticated, bloqueadores nativos via accessor, delay infinito nativo, contextos carregado/colocado e atualização parcial de entidades. | Elegibilidade, coexistência com Pickup e alcance em mundo. |
+| Refill | Regras por filtro/slot-alvo e seleção de bloco com extração e tentativa de recuperação; `ANY` preenche pilhas parciais compatíveis antes de usar slots vazios. | Mãos, toolbar, seleção, slot modificado e limites de inventário. |
 | Feeding | Condições nativas, uma unidade por operação e reserva persistida; retorno de recipiente. | Tipos de comida, limiares, efeitos de uso e interrupções. |
 | Alchemy | Definições nativas, condições, duração escalada por ticks e reserva persistida. | Lista extensível, aplicações reais, efeitos e interrupções/reinício. |
-| Pump | Mãos, seis handlers adjacentes e mundo; mochila equipada/na mão/colocada; roteamento parcial, mínimo de um balde e guard de capability em cache. | Regressão em jogo com AE2/RS, proteção/vaporização e interrupções. |
+| Pump | Mãos, seis handlers adjacentes e mundo; mochila equipada/na mão/colocada; roteamento parcial, mínimo de um balde, guard de capability em cache e recuperação de reserva mesmo desativado. | Regressão em jogo com AE2/RS, proteção/vaporização e interrupções. |
 
 Os controles de prioridade Rede primeiro / Mochila primeiro usam o mesmo botão 16×16 da aba Magnet em Pickup, Magnet, Refill, Feeding, Alchemy e Pump. Os toggles de interação do Pump usam os sprites 16×16 e os tooltips da aba Pump avançada do Sophisticated Core. Na aba Pump, a posição dos controles acompanha a altura do filtro nativo; o vínculo ocupa uma linha separada com 8 px de distância do botão de prioridade, e a aba usa o dimensionamento automático nativo (P02/P06). Seletores por slot ou condição continuam com o controle compacto próprio.
 
 A aba Refill dispõe os seletores de destino ao lado da grade nativa de itens, com intervalo horizontal de 2 px entre botões. Os indicadores são A (Any), M (mão principal), O (mão secundária) e 1–9 (hotbar), preservando tooltips e persistência nativos (P02/P06; [REFILL.md](upgrades/REFILL.md)).
+
+A aba Alchemy reproduz os controles nativos do Sophisticated Core: oito filtros fantasma de poção em duas colunas, oito botões de condição em pares, três toggles de comparação, estados desabilitados e tooltips nativos. As condições e seus valores padrão vêm das definições nativas, incluindo extensões; `HURT` usa o limiar e o scroll nativos. A prioridade e o vínculo ficam abaixo das quatro linhas de configuração. Ao carregar configurações antigas, a migração mantém os primeiros oito filtros e atributos e descarta o nono, sem tocar em vínculo, prioridade ou reserva (P02/P06; [ALCHEMY.md](upgrades/ALCHEMY.md)).
 
 ### Revisão dos fluxos do Remote Pump
 

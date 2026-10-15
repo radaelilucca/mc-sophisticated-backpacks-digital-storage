@@ -14,7 +14,7 @@ Aplicar [P02 — vínculo e receita compartilhada de desvínculo](../UPGRADES.md
 
 ## 3. Estado atual e dependências
 
-**Implementação atual (2026-10-12):** condição/atributos e definições nativas estão conectados por accessor Mixin localizado; o serviço mantém duração e reserva persistida. Sua textura 16×16 parte do ícone avançado original e usa a paleta remota do Magnet; o modelo aponta para o asset local. A compilação e inicialização passaram. Aparência, consumíveis extensíveis, hooks, duração e interrupções ainda precisam de cenários reais.
+**Implementação atual (2026-10-15):** condição/atributos e definições nativas estão conectados por accessor Mixin localizado; o serviço mantém duração e reserva persistida. A textura 16×16 parte do ícone avançado original e usa a paleta remota do Magnet. Forge 1.20.1 e NeoForge 1.21.1 reproduzem a aba avançada nativa: oito slots de poção fantasma em duas colunas, nove estados nativos de condição, três controles nativos de comparação e sprites/tooltips do Sophisticated Core. Slots vazios mostram a condição desabilitada; inserir um item escolhe o padrão da primeira definição nativa compatível, substituir preserva a configuração e remover redefine para `NEVER`. `HURT` começa em 75% e seu limiar muda em passos de 5% por scroll. Configurações antigas descartam o nono filtro e seu atributo ao serem carregadas. A prioridade remota e o vínculo permanecem abaixo dos controles nativos. Testes e validação visual/operação em jogo ainda são necessários.
 
 **Verificado:** `AlchemyCondition.test(LivingEntity, float)` e condições `NEVER`, `ALWAYS`, `UNDER_WATER`, `ON_FIRE`, `FALLING`, `MINING`, `SPRINTING`, `HURT` e `NEGATIVE_EFFECT`. Há atributos, comparadores públicos e `AlchemyItemDefinition` com funções de início/fim de uso. `addItemDefinition` permite extensões; a lista de definições e parte da aplicação são privadas.
 
@@ -26,7 +26,8 @@ Aplicar [P02 — vínculo e receita compartilhada de desvínculo](../UPGRADES.md
 - Definições: consultar registro nativo na operação; usar filtros, `canApply`, comparadores e rotinas de uso da definição. Não restringir a uma lista própria de poções/leite/maçãs.
 - Estado proposto: ocioso, reservado, em uso e recuperando. Persistir a unidade real reservada e dados suficientes de recuperação; referências de entidade/definição são transitórias.
 - Serviço: primeira regra elegível em ordem de slot inicia uma aplicação; nenhuma segunda extração enquanto houver recurso reservado.
-- Container/aba: controles nativos de condições/valores, comparação de efeitos e filtros, prioridade, vínculo e indicação de pendência. Validar valores no servidor pelas regras nativas.
+- Container/aba: oito slots de poção fantasma e grade de condições em duas colunas, usando `AlchemyUpgradeTab.ALCHEMY_CONDITION`, `ANY_EFFECT_MISSING`, `MATCH_DURATION` e `MATCH_AMPLIFIER`. Reproduzir slots e fundos nativos; deixar condição, tooltip e scroll inativos quando o filtro está vazio. Prioridade e vínculo ficam abaixo das quatro linhas nativas. Validar alterações no servidor.
+- Compatibilidade: normalizar filtros e atributos persistidos para oito posições, preservando os índices 0–7 e descartando o índice 8. A migração é idempotente e não altera vínculo, prioridade, comparação ou reserva.
 - Accessor Mixin: expor registro privado de definições para leitura na versão fixada. Não usar reflexão nem substituir a implementação nativa global.
 
 ## 5. Fluxo operacional
@@ -50,14 +51,14 @@ Não prometer atomicidade entre efeitos e salvamento em encerramento abrupto do 
 
 ## 7. Etapas de entrega
 
-- [ ] Adaptar atributos e acesso ao registro; gate: definições adicionais ficam visíveis sem lista duplicada.
+- [x] Adaptar atributos, definições nativas, layout e migração para oito filtros; gate funcional ainda depende dos cenários de integração abaixo.
 - [ ] Implementar reserva/máquina de estados; gate: uma unidade e uma aplicação ativas no máximo.
 - [ ] Integrar duração, consumo e recipientes; gate: efeitos/hooks executados uma vez.
 - [ ] Implementar interrupções/GUI; gate: reinício e remoção não perdem a unidade não consumida.
 
 ## 8. Validação e aceitação
 
-Testes: cada condição disponível, limiares, comparação de efeitos/duração/amplificador, duas regras elegíveis, definição adicionada, simulação sem reserva, uso ativo sem nova extração, interrupção e retorno de recipiente.
+Testes: inserção/substituição/remoção/reabertura do filtro; cada condição e valor padrão; bloqueio de slot vazio; `HURT` em 0/75/100% e passos de 5%; migração com nona regra sem alteração das oito primeiras; comparação de efeitos/duração/amplificador; duas regras elegíveis, definição adicionada, simulação sem reserva, uso ativo sem nova extração, interrupção e retorno de recipiente.
 
 Em jogo: fogo, submersão, ferimento e efeito negativo; poções e outros consumíveis definidos nativamente; perda de conexão após reserva; remoção, desabilitação, morte e reinício durante uso; Feeding junto. **Aceito quando** somente o portador é afetado, duração nativa é respeitada e nenhuma aplicação/reserva é duplicada.
 

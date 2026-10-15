@@ -39,7 +39,33 @@
         "${workspaceFolder}\\.vscode\\run-gradle.ps1",
         "--no-daemon",
         "--no-parallel",
-        "runClient",
+        ":neoforge:runClient",
+        "--console=plain"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": "$gradle",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Digital Storages Expansion: Run Forge Client",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\run-gradle.ps1",
+        "--no-daemon",
+        "--no-parallel",
+        ":forge:runClient",
         "--console=plain"
       ],
       "options": {

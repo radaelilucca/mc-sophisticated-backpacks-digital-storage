@@ -12,7 +12,7 @@ Alcance de atração e conexão sem fio são independentes: um drop dentro da at
 
 ## 3. Estado atual e dependências
 
-**Implementação atual (2026-10-12):** Magnet reutiliza a faixa do item avançado nativo, bloqueadores do Sophisticated via accessor e transferência parcial com atualização do drop. Item, aba, prioridade e cooldown foram registrados; compilação e inicialização passaram. A textura `assets/sophisticated_backpacks_digital_storages_expansion/textures/item/remote_magnet_upgrade.png` parte do sprite avançado Sophisticated em 16×16. A paleta compartilhada usa verdes e roxos no símbolo, amarelo vivo nos cantos preenchidos, branco nos pontos verticais e azul diamante nos horizontais. Alcance, bloqueadores, aparência no inventário e coexistência com Pickup ainda aguardam validação em mundo.
+**Implementação atual (2026-10-15):** Forge e NeoForge Magnet reutilizam a faixa do item avançado nativo, bloqueadores do Sophisticated via accessor e transferência parcial com atualização do drop. No callback carregado usam o portador; para mochila colocada procuram o jogador real elegível mais próximo dentro de três blocos, validam interação com o bloco e usam a posição da mochila como origem de alcance remoto. A elegibilidade segue o nativo: impede somente o pickup delay infinito (`32767`) e os bloqueadores registrados. `PreventRemoteMovement` bloqueia o Magnet carregado; para mochila colocada, o bloqueio é suspenso quando o drop também tem `AllowMachineRemoteMovement`. Delay finito e dono diferente não bloqueiam a coleta. Os três estados do filtro usam ícones de lista permitida, bloqueada e mochila do atlas Sophisticated. A aparência do item e a coexistência com Pickup ainda aguardam validação em mundo.
 
 **Verificado:** Core fornece `ITickableUpgrade`, `ContentsFilterLogic`, `MagnetUpgradeConfig.magnetRange` e `IMagnetPreventionChecker.isBlocked(Entity)`. O wrapper nativo registra checkers por `addMagnetPreventionChecker`; seu conjunto e rotinas de seleção são privados.
 
@@ -22,14 +22,14 @@ Alcance de atração e conexão sem fio são independentes: um drop dentro da at
 
 - Item/wrapper: implementar `ITickableUpgrade`, filtros avançados, prioridade e estado de cooldown por wrapper. Não implementar um segundo caminho de coleta normal via `IPickupResponseUpgrade`.
 - Serviço: buscar `ItemEntity` na região nativa de atração; ordenar candidatos por distância e ID de entidade para processamento estável.
-- Elegibilidade: respeitar entidade viva, stack presente, pickup delay, restrições de dono e impedimentos de magnetismo nativos. Não contornar proteção de outro mod.
-- Accessor Mixin: leitura do conjunto nativo de `IMagnetPreventionChecker` na versão fixada; aplicar checkers à entidade/contexto conforme a semântica nativa. Não refletir campos por nome em runtime.
+- Elegibilidade: respeitar entidade viva, stack presente, delay infinito (`32767`) e impedimentos de magnetismo nativos. Aplicar `PreventRemoteMovement` no contexto carregado; no contexto colocado, respeitar a exceção Sophisticated `AllowMachineRemoteMovement`. Igualar o comportamento Sophisticated para drops com delay finito ou dono diferente; não contornar proteção de outro mod.
+- Accessor Mixins localizados: leitura do conjunto nativo de `IMagnetPreventionChecker` e do pickup delay privado na versão fixada; aplicar checkers e a exceção para delay infinito conforme a semântica nativa. Não refletir campos por nome em runtime.
 - Roteamento: oferecer cópia do stack atual, processar destinos na ordem configurada e atualizar entidade somente pela diferença aceita.
 - Container/aba: controles de filtros e prioridade, estado; desvínculo somente pela receita de [P02](../UPGRADES.md#P02). Não mostrar opção de XP sem implementação.
 
 ## 5. Fluxo operacional
 
-1. Receber callback server-side, validar jogador, wrapper e cooldown; sem jogador, pausar.
+1. Receber callback server-side e validar wrapper/cooldown. Para mochila carregada usar o portador; para mochila colocada resolver jogador real elegível até três blocos, validar interação com o bloco e pausar sem esse contexto. A elegibilidade dos drops usa o tipo de contexto do upgrade, não a identidade do jogador próximo.
 2. Resolver contexto e elegibilidade de atração; rede indisponível deixa somente o caminho local disponível.
 3. Buscar candidatos dentro dos limites nativos e aplicar bloqueadores/filtro.
 4. Para cada candidato ainda válido, simular e executar roteamento protegido.
@@ -40,19 +40,19 @@ Alcance de atração e conexão sem fio são independentes: um drop dentro da at
 
 Ambos os destinos cheios deixam o drop intacto. Não reservar entidades entre ticks. Outra mochila pode coletar primeiro; reler existência/stack imediatamente antes da transferência evita usar oferta antiga.
 
-Mochila colocada sem jogador no callback não atrai itens. Sair de alcance da rede não altera o raio de atração e permite fallback local. Remover/desabilitar o upgrade interrompe buscas; guard e contexto não sobrevivem ao tick.
+Mochila colocada sem jogador elegível próximo não opera. Sair de alcance da rede não altera o raio de atração e permite fallback local. Remover/desabilitar o upgrade interrompe buscas; guard e contexto não sobrevivem ao tick.
 
 ## 7. Etapas de entrega
 
-- [ ] Integrar contexto e cooldown nativos; gate: nenhuma busca sem jogador ou fora da cadência.
+- [ ] Integrar contexto e cooldown nativos; gate: mochila colocada usa somente jogador real próximo e respeita a cadência do callback.
 - [ ] Integrar bloqueadores e elegibilidade; gate: drops protegidos não são modificados.
 - [ ] Conectar roteamento e atualizar entidades; gate: transferências parciais conservam o resto.
 - [ ] Registrar GUI/receita e regressão; gate: convivência com Pickup e múltiplas mochilas aprovada.
 
 ## 8. Validação e aceitação
 
-Testes: fronteira de atração, ambas as prioridades, filtros, bloqueadores registrados, delay/dono, entidade removida, mudança do stack, destinos parciais/cheios e cooldown.
+Testes: fronteira de atração, ambas as prioridades, filtros, bloqueadores registrados, delay infinito/finito, dono diferente, `PreventRemoteMovement` carregado, `PreventRemoteMovement` com/sem `AllowMachineRemoteMovement` colocado, entidade removida, mudança do stack, destinos parciais/cheios e cooldown.
 
-Em jogo: drops dentro/fora da atração e cobertura sem fio, backends isolados/juntos, Magnet com Pickup, duas mochilas próximas, mochila colocada sem jogador e XP no chão. **Aceito quando** somente drops elegíveis são coletados, XP não é processado e a quantidade remanescente nunca desaparece.
+Em jogo: drops dentro/fora da atração e cobertura sem fio, backends isolados/juntos, Magnet com Pickup, duas mochilas próximas, mochila colocada com/sem jogador elegível, combinação dos bloqueadores por contexto e XP no chão. **Aceito quando** somente drops elegíveis são coletados, XP não é processado e a quantidade remanescente nunca desaparece.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)

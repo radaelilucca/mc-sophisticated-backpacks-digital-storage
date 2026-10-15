@@ -16,9 +16,9 @@ Tom’s desta versão não oferece a capacidade: vínculo é permitido, mostra *
 
 ## 3. Estado atual e dependências
 
-**Implementação atual (2026-10-12):** `PumpService` resolve contexto, modos e alvos. `PumpStorageRouter` aplica prioridade dentro de cada interação e oferece ao segundo storage somente o restante: entrada pode dividir um balde entre rede e tanque; saída pode somar a mesma identidade/componente das duas fontes. `PumpTransferService` simula, persiste a extração real e recupera sobras. Coleta do mundo exige capacidade para o balde inteiro. Saída aceita ar e fluido corrente, preservando fontes existentes. Recipientes usam cópia de uma unidade; a própria mochila é excluída por identidade/UUID. `GuardedFluidHandler` protege referências externas já em cache; o guard engloba resolução, consulta, execução e recuperação. Tom’s pausa por incompatibilidade. Textura e modelo continuam no padrão aprovado. A regressão operacional no cliente ainda precisa ser executada.
+**Implementação atual (2026-10-15):** `PumpService` resolve contexto, modos e alvos. `PumpStorageRouter` aplica prioridade dentro de cada interação e oferece ao segundo storage somente o restante: entrada pode dividir um balde entre rede e tanque; saída pode somar a mesma identidade/componente das duas fontes. `PumpTransferService` simula, persiste a extração real e recupera sobras. Coleta do mundo exige capacidade para o balde inteiro. Saída aceita ar e fluido corrente, preservando fontes existentes. Recipientes usam cópia de uma unidade; a própria mochila é excluída por identidade/UUID. `GuardedFluidHandler` protege referências externas já em cache; o guard engloba resolução, consulta, execução e recuperação. Tom’s pausa por incompatibilidade. Uma reserva pendente continua sendo recuperada mesmo quando o upgrade está desativado; sem reserva, o estado desativado impede novas transferências. Textura e modelo continuam no padrão aprovado. A regressão operacional no cliente ainda precisa ser executada.
 
-**Causas corrigidas nesta revisão:** limite abaixo de 1.000 mB bloqueava baldes e mundo em qualquer contexto; tick descartava mochilas colocadas; seleção parava no primeiro fluido mesmo quando outro correspondia ao filtro/destino; colocação confundia fonte com fluido corrente; prioridade não complementava operações parciais; recipiente na mão podia ser a própria mochila ou uma stack incompatível com a capability.
+**Causas corrigidas nesta revisão:** limite abaixo de 1.000 mB bloqueava baldes e mundo em qualquer contexto; tick descartava mochilas colocadas; seleção parava no primeiro fluido mesmo quando outro correspondia ao filtro/destino; colocação confundia fonte com fluido corrente; prioridade não complementava operações parciais; recipiente na mão podia ser a própria mochila ou uma stack incompatível com a capability. Em Forge 1.20.1, a validação da reserva agora lê o identificador `FluidName` produzido pelo `FluidStack.writeToNBT`; a chave `Fluid` usada na implementação NeoForge não existe na serialização Forge e fazia todos os candidatos serem rejeitados.
 
 **GUI refinada:** os quatro toggles de Pump usam os mesmos sprites 16×16, estados e tooltips da aba Pump avançada do Sophisticated Core (Pump input/output, recipiente na mão, mundo e tanques/tubos). A prioridade usa o botão compartilhado do Magnet/Pickup conforme [P05](../UPGRADES.md#P05). Os controles ficam 6 px abaixo dos filtros; o resumo de vínculo ocupa uma linha própria, 8 px abaixo do botão de prioridade. O tamanho da aba acompanha os controles nativos, conforme P02/P06, sem o espaço vazio do posicionamento anterior.
 
@@ -40,8 +40,8 @@ Tom’s desta versão não oferece a capacidade: vínculo é permitido, mostra *
 
 ## 5. Fluxo operacional
 
-1. Resolver jogador no callback ou próximo à mochila colocada (P04); validar habilitação, instalação, cooldown, modos e capacidade do backend. Usar a posição real da mochila para alcance remoto. Abrir guard antes de resolver/consultar a rede.
-2. Recuperar reserva pendente; selecionar interação local e armazenamento pela prioridade.
+1. Validar instalação, cooldown e contexto de jogador (P04). Abrir o guard antes de resolver/consultar a rede. Usar a posição real da mochila para alcance remoto.
+2. Recuperar primeiro qualquer reserva pendente, mesmo com o upgrade desativado. Se não houver reserva e o upgrade estiver desativado, encerrar o tick sem iniciar transferência. Com o upgrade habilitado, selecionar interação local e armazenamento pela prioridade.
 3. Ler identidade e simular origem/destino com componentes preservados e quantidade limitada.
 4. Em handlers/recipientes, drenar somente quantidade planejada, persistir reserva real e preencher destino; sobra tenta a fonte externa imediatamente quando reversível, depois segue recuperação. Ao somar extrações remota/local, persistir cada parcela antes de chamar a próxima fonte.
 5. Em mundo, exigir aceitação de unidade completa antes de alterar bloco. Usar APIs que respeitem proteção, coleta/colocação e comportamento da dimensão.
@@ -55,6 +55,8 @@ Para coleta do mundo, se o destino mudar após simulação, manter fluido efetiv
 Não drenar unidade parcial de bloco do mundo. Rede/tanque cheios podem deixar reserva pendente, nunca descartar fluido. Fallback não repete quantidade já aceita. Permissões de drenar origem e preencher destino são independentes.
 
 Remoção ou reinício mantém reserva no upgrade. Ao reinstalar, tentar primeiro devolver à origem válida/autorizada, depois tanque local compatível; se não houver destino seguro, conservar pendência e pausar. Fluido não usa fallback de drop de item nem desaparece para desbloquear o upgrade.
+
+Desativar o Pump não descarta nem congela uma reserva já extraída: cada tick elegível continua a recuperação e não inicia outra transferência enquanto desativado.
 
 Alterar direção/filtros não transmuta reserva; ela mantém identidade original para recuperação. Troca/desvínculo bloqueados durante pendência. Sem jogador no contexto de P04, nenhuma interação de mundo/mãos/handlers é iniciada. Mochila colocada não conserva acesso quando esse jogador sai do alcance ou desconecta.
 
@@ -72,7 +74,7 @@ Alterar direção/filtros não transmuta reserva; ela mantém identidade origina
 
 **Reteste manual obrigatório após reiniciar o cliente:** em AE2 e RS, repetir entrada e saída com mochila equipada, na mão e colocada; testar individualmente mãos, mundo e tanks/tubos adjacentes, ambas as prioridades, sem tanque local e com tanque. Na mochila colocada, permanecer no alcance de contexto de P04; afastar/desconectar o jogador deve pausar a operação. Confirmar água/lava, fluido filtrado que não é o primeiro da rede, falta de um balde completo, capacidade parcial, perda de alcance/energia e recipiente empilhado. Nenhum gate manual foi marcado como concluído.
 
-Testes: conversão de unidades/extremos, componentes, ambas as direções/prioridades, capacidade parcial, nenhum tanque local, reserva cheia, handler muda após simular, recuperação impossível e incompatibilidade Tom’s.
+Testes: conversão de unidades/extremos, componentes, ambas as direções/prioridades, capacidade parcial, nenhum tanque local, reserva cheia, recuperação impossível ou com upgrade desativado, sem iniciar nova transferência desativado, handler muda após simular e incompatibilidade Tom’s.
 
 Em jogo: água/lava e fluido modded, recipientes empilhados e com capability, tanques/pipe adjacentes, mundo protegido, água em dimensão que evapora, rede sem energia, tanque exposto à própria rede, remoção/reinício com fluido pendente. **Aceito quando** AE2/RS transferem quantidades corretas, nenhuma sobra some e Tom’s comunica a limitação sem executar a função.
 

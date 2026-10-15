@@ -58,15 +58,10 @@ Craft each Remote Upgrade using its matching advanced Sophisticated Backpacks up
 
 **Minecraft 1.21.1 · NeoForge 21.1.236+**
 
-**Required mods:**
+Required: Sophisticated Backpacks 3.26.3+ and Sophisticated Core 1.5.1+. Compatible storage mods: Applied Energistics 2 19.2.18+, Refined Storage 2.0.9+, and Tom's Simple Storage 2.4.2+.
 
-- Sophisticated Backpacks 3.26.3+
-- Sophisticated Core 1.5.1+
+**Minecraft 1.20.1 · Forge 47.4.10+**
 
-**Compatible storage mods:**
-
-- Applied Energistics 2 19.2.18+
-- Refined Storage 2.0.9+
-- Tom's Simple Storage 2.4.2+
+Required: Sophisticated Backpacks 3.26.12 and Sophisticated Core 1.5.10.2402. Compatible storage mods: Applied Energistics 2 15.4.11, Refined Storage 1.12.4, and Tom's Simple Storage 1.7.1.
 
 Use one supported storage mod or several together. Each upgrade keeps the network you link it to, so different upgrades in the same backpack can serve different networks.

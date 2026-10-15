@@ -23,7 +23,7 @@ Expor a seleção de destinos do Refill avançado nativo, incluindo os slots de 
 ## 4. Implementação
 
 - Wrapper: filtros avançados, mapa filtro → `TargetSlot`, prioridade e cooldown; salvar alterações via componentes/codificação nativa quando compatível.
-- Serviço: calcular déficit pela identidade configurada e estado real do alvo; consultar/extrair somente o necessário. Processar regras em ordem de slot de filtro.
+- Serviço: calcular déficit pela identidade configurada e estado real do alvo; consultar/extrair somente o necessário. Processar regras em ordem de slot de filtro. Para `ANY`, completar primeiro uma pilha existente que corresponda em identidade/componentes e só usar um slot vazio quando não houver pilha parcial compatível.
 - Destino: usar API do inventário do jogador, validar aceitação e sincronizar alterações pelo caminho nativo. Não modificar equipamento fora dos destinos nativos expostos.
 - Seleção de bloco: implementar `IBlockPickResponseUpgrade` usando o mesmo serviço; preservar regras nativas de slot selecionado e realocação da seleção anterior.
 - Container/aba: adaptar controles nativos ao wrapper universal; expor seleção por filtro, prioridade e vínculo; desvínculo somente pela receita de [P02](../UPGRADES.md#P02).
@@ -32,7 +32,7 @@ Expor a seleção de destinos do Refill avançado nativo, incluindo os slots de 
 ## 5. Fluxo operacional
 
 1. Receber tick do portador válido ou callback de seleção de bloco; conferir habilitação/cooldown aplicável.
-2. Ler regras e destino atual; calcular déficit sem substituir item incompatível.
+2. Ler regras e destino atual; calcular déficit sem substituir item incompatível. Para `ANY`, priorizar pilhas parciais compatíveis antes de slots vazios.
 3. Planejar espaço e abrir guard de saída ao acessar rede que possa conter a própria mochila.
 4. Extrair da fonte prioritária e da secundária apenas o déficit restante.
 5. Revalidar destino e inserir o resultado real; recuperar qualquer excedente.
@@ -53,7 +53,7 @@ Não consumir reservas de Feeding/Alchemy e não retirar recursos de slots de up
 
 ## 8. Validação e aceitação
 
-Testes: slots vazios/parciais/cheios, componentes distintos, stack máximo variável, mão principal/secundária, regra sobreposta, destino alterado, fonte parcial, recuperação e seleção de bloco sem espaço.
+Testes: slots vazios/parciais/cheios, `ANY` escolhendo pilha parcial compatível antes de slot vazio, componentes distintos, stack máximo variável, mão principal/secundária, regra sobreposta, destino alterado, fonte parcial, recuperação e seleção de bloco sem espaço.
 
 Em jogo: consumir blocos, tochas e foguetes, trocar o item do slot, selecionar bloco, perder cobertura e alternar prioridade nos três backends. **Aceito quando** somente o déficit chega ao portador, sem sobrescrita e com comportamento nativo de seleção de destino.
 

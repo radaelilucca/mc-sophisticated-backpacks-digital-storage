@@ -3,6 +3,7 @@
 - [PRD do MVP](PRD.md) — requisitos, conectividade e critérios de aceitação para depósitos de mochila em sistemas de storage digital.
 - [Arquitetura implementada](ARCHITECTURE.md) — responsabilidades compartilhadas, contratos, proteções e estado atual da integração.
 - [Planos dos upgrades universais](UPGRADES.md) — premissas aprovadas, contratos, sequência e critérios de validação dos oito upgrades.
+- [Base multiloader](MULTILOADER.md) — implementação Forge 1.20.1, artefatos e evidências de validação pendentes.
 
 ## Planos por upgrade
 
