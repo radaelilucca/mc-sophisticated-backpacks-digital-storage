@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Digital Storages Expansion: Build",
+      "label": "Digital Storages Expansion: Build All",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -13,7 +13,59 @@
         "${workspaceFolder}\\.vscode\\run-gradle.ps1",
         "--no-daemon",
         "--no-parallel",
-        "build",
+        "buildAll",
+        "--console=plain"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$gradle",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Digital Storages Expansion: Build Forge",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\run-gradle.ps1",
+        "--no-daemon",
+        "--no-parallel",
+        ":forge:build",
+        "--console=plain"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$gradle",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Digital Storages Expansion: Build NeoForge",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\run-gradle.ps1",
+        "--no-daemon",
+        "--no-parallel",
+        ":neoforge:build",
         "--console=plain"
       ],
       "options": {

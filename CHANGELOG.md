@@ -8,11 +8,7 @@
 
 ### Changed
 
-- Remote Refill now uses the native Sophisticated filter grid, with the selected target shown on each filter and changed by scrolling.
-
-### Fixed
-
-- Refill target indicators now render inside the correct filter slots, and tooltips show the current target and scroll instructions in Forge and NeoForge.
+- Remote Refill and Remote Alchemy now uses the native Sophisticated filter grid.
 
 ## [0.1.0] - 2026-10-12
 
