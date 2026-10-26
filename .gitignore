@@ -7,3 +7,4 @@ libs/forge/*.jar
 *.iml
 out/
 .gradle*/
+**/logs/
