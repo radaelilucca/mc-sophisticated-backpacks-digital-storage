@@ -79,3 +79,7 @@ Testes: conversão de unidades/extremos, componentes, ambas as direções/priori
 Em jogo: água/lava e fluido modded, recipientes empilhados e com capability, tanques/pipe adjacentes, mundo protegido, água em dimensão que evapora, rede sem energia, tanque exposto à própria rede, remoção/reinício com fluido pendente. **Aceito quando** AE2/RS transferem quantidades corretas, nenhuma sobra some e Tom’s comunica a limitação sem executar a função.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

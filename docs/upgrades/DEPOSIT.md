@@ -58,3 +58,7 @@ Testes: permissão/bloqueio/conteúdo, componentes, simulação zero, capacidade
 Em jogo: mochila carregada e colocada, GUI já aberta, cada backend, fronteiras sem fio, permissões, rede cheia/offline, reinício com item antigo e mochila exposta à própria rede. **Aceito quando** o comportamento da POC é preservado e a fundação nova não introduz dependência de extração, duplicação ou reabertura da GUI.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

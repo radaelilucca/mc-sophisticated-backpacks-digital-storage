@@ -28,16 +28,22 @@ final class UpgradeItemSources {
 
     static List<SourceItem> find(PriorityLinkedStorageUpgradeWrapper<?, ?> wrapper, ServerPlayer player,
             SourcePriority priority, Predicate<ItemStack> eligible) {
-        List<SourceItem> network = new ArrayList<>();
-        resolveExtractTarget(wrapper, player).ifPresent(target -> {
-            for (StoredItemAmount amount : target.getAvailableItemAmounts(player)) {
-                ItemStack exemplar = amount.exemplar();
-                if (!exemplar.isEmpty() && amount.amount() > 0 && eligible.test(exemplar)) {
-                    network.add(new SourceItem(exemplar.copyWithCount(1), amount.amount(), target));
-                }
-            }
-        });
+        return find(wrapper, player, priority, eligible, Optional.empty(), Integer.MAX_VALUE);
+    }
 
+    static List<SourceItem> find(PriorityLinkedStorageUpgradeWrapper<?, ?> wrapper, ServerPlayer player,
+            SourcePriority priority, Predicate<ItemStack> eligible, Optional<net.minecraft.world.item.Item> knownItem, int needed) {
+        List<SourceItem> network = new ArrayList<>();
+        try (StorageTransferGuard guard = StorageTransferGuard.blockExternalExtraction(wrapper.getStorageWrapper())) {
+            resolveExtractTarget(wrapper, player).ifPresent(target -> {
+                for (StoredItemAmount amount : target.queryItems(player, eligible, knownItem, needed)) {
+                    ItemStack exemplar = amount.exemplar();
+                    if (!exemplar.isEmpty() && amount.amount() > 0 && eligible.test(exemplar)) {
+                        network.add(new SourceItem(exemplar.copyWithCount(1), amount.amount(), target));
+                    }
+                }
+            });
+        }
         List<SourceItem> backpack = new ArrayList<>();
         ITrackedContentsItemHandler inventory = wrapper.getStorageWrapper().getInventoryForUpgradeProcessing();
         for (int slot = 0; slot < inventory.getSlots(); slot++) {
@@ -82,7 +88,13 @@ final class UpgradeItemSources {
             if (available <= 0) {
                 return ItemStack.EMPTY;
             }
-            return source.target().extract(source.stack(), Math.min(available, requested), player);
+            ItemStack extracted = source.target().extract(source.stack(), Math.min(available, requested), player);
+            if (!extracted.isEmpty() && !ItemStack.isSameItemSameComponents(source.stack(), extracted)) {
+                ItemStack remainder = returnToSource(wrapper, player, source, extracted);
+                if (!remainder.isEmpty()) recover(wrapper, player, remainder);
+                return ItemStack.EMPTY;
+            }
+            return extracted;
         }
     }
 

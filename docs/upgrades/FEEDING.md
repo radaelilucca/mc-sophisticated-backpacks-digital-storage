@@ -60,3 +60,7 @@ Testes: limiares, ferimento, filtros, comidas com componentes/efeitos, item não
 Em jogo: alimentos comuns e com recipientes, rede somente com extração permitida, perda de alcance, inventário cheio e Feeding junto com Alchemy. **Aceito quando** o portador é alimentado sob condições configuradas, efeitos são preservados e não há consumo/restituição dupla.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

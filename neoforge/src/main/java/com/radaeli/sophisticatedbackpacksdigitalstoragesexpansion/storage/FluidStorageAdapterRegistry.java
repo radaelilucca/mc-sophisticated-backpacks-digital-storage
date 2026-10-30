@@ -28,6 +28,7 @@ public final class FluidStorageAdapterRegistry {
             if (ModList.get().isLoaded("refinedstorage")) {
                 register(adapters, new RefinedStorageFluidStorageAdapter());
             }
+            if (ModList.get().isLoaded("scc")) register(adapters, new SccFluidStorageAdapter());
             return Collections.unmodifiableMap(adapters);
         }
 
@@ -64,7 +65,7 @@ public final class FluidStorageAdapterRegistry {
         if (!level.mayInteract(player, endpoint.pos())) {
             return FluidStorageConnection.unavailable(FluidStorageConnection.Status.ACCESS_DENIED);
         }
-        Optional<FluidStorageTarget> target = adapter.resolve(level, endpoint);
+        Optional<FluidStorageTarget> target = adapter.resolve(level, endpoint, source);
         if (target.isEmpty()) {
             return FluidStorageConnection.unavailable(FluidStorageConnection.Status.ENDPOINT_MISSING);
         }

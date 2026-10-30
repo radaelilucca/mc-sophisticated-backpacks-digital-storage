@@ -179,3 +179,7 @@ A aba oferece Depositar e um resumo compacto da rede. Dimensão e coordenadas ap
 Estas alterações ainda precisam de validação visual e operacional em jogo; não constituem conclusão dos gates P12.
 
 Verificação desta consolidação: `compileJava processResources` concluídos com Java 21, sem executar testes. Permanecem dois avisos de depreciação preexistentes em `ClientModEvents`. GUI, receita, conflitos nas duas ordens e regressão nas três redes aguardam validação em jogo.
+
+## SCC backend (NeoForge only)
+
+The eight universal upgrade paths now include the optional SCC 1.5.3 adapter. See [SCC integration](integrations/SCC.md) for exact coverage, native permissions, virtual decompression, component limits and outstanding runtime acceptance. This is implementation status, not gameplay validation.

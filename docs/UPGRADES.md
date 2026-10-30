@@ -191,3 +191,7 @@ Etapas 2 e 3 dependem da fundação; Magnet reutiliza o roteamento do Pickup; Re
 - [ ] Single player e servidor dedicado, com prova manual registrada por função/backend.
 
 Manter a arquitetura sincronizada com o código. A implementação foi compilada e carregada no cliente; os cenários deste documento continuam sendo critérios de validação, não resultados presumidos.
+
+## SCC 1.5.3
+
+NeoForge now includes SCC for all eight universal paths (Pump: fluids without added components). Follow P02–P12 and [SCC phases](integrations/SCC.md); no SCC runtime gate is marked complete. Forge remains on its existing backends.

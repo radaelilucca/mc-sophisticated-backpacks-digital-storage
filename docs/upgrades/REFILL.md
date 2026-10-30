@@ -60,3 +60,7 @@ Testes: slots vazios/parciais/cheios, `ANY` escolhendo pilha parcial compatível
 Em jogo: consumir blocos, tochas e foguetes, trocar o item do slot, selecionar bloco, perder cobertura e alternar prioridade nos três backends. **Aceito quando** somente o déficit chega ao portador, sem sobrescrita e com comportamento nativo de seleção de destino.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

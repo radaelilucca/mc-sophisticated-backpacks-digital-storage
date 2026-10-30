@@ -9,6 +9,18 @@ import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.storage.Storag
 public interface StorageTarget {
     StorageEndpoint endpoint();
 
+    default boolean canBind(ServerPlayer player, SourceLocation source) {
+        return canAccess(player, source, StorageOperation.INSERT);
+    }
+
+    default List<StoredItemAmount> queryItems(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+            java.util.Optional<net.minecraft.world.item.Item> item, int needed) {
+        if (needed <= 0) return List.of();
+        return getAvailableItemAmounts(player).stream()
+                .filter(value -> item.map(type -> value.exemplar().is(type)).orElse(true))
+                .filter(value -> matches.test(value.exemplar())).toList();
+    }
+
     boolean isReachable(ServerPlayer player, SourceLocation source);
 
     IItemHandler getAvailableItems(ServerPlayer player);

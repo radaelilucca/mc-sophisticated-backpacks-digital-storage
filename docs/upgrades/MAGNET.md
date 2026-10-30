@@ -56,3 +56,7 @@ Testes: fronteira de atração, ambas as prioridades, filtros, bloqueadores regi
 Em jogo: drops dentro/fora da atração e cobertura sem fio, backends isolados/juntos, Magnet com Pickup, duas mochilas próximas, mochila colocada com/sem jogador elegível, combinação dos bloqueadores por contexto e XP no chão. **Aceito quando** somente drops elegíveis são coletados, XP não é processado e a quantidade remanescente nunca desaparece.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

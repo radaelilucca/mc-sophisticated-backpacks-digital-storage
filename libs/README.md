@@ -29,3 +29,7 @@ Os JARs Forge usados na auditoria foram:
 | `toms_storage-1.20-1.7.1.jar` | `toms_storage` | 1.7.1 |
 
 O módulo Forge fixa versões imutáveis desses arquivos pelo Maven do Modrinth; AE2 usa GuideME `20.1.7` do Maven Central. A compilação atual testa o pipeline de plataforma e o código comum, ainda sem referenciar as APIs Sophisticated/backend porque os wrappers e adaptadores Forge estão pendentes. Consulte [MULTILOADER.md](../docs/MULTILOADER.md).
+
+## SCC 1.5.3 exception
+
+Unlike the older audit-only artifacts above, ignored file scc-1.5.3.jar is required for NeoForge compilation. Obtain the supplied audited artifact and verify SHA-256 e81ed8d3fdab7ce9bc35efc58036b63dcb6baefd07613156599dd638f8e84d3c. The Gradle verifySccJar task enforces it. SCC is not packaged inside the addon. See ../docs/integrations/SCC.md for runtime profiles and limitations.

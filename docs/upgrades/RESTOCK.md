@@ -57,3 +57,7 @@ Testes: modos de filtro, conteúdo inicial, memória, stacks não empilháveis, 
 Em jogo: rede → mochila nos três sistemas, permissão de extração sem inserção, instalação/remoção na GUI, mochila colocada, rede compartilhando a própria mochila e reinício. **Aceito quando** somente itens elegíveis entram, a extração é limitada à capacidade e nenhuma sobra é descartada.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

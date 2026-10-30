@@ -56,7 +56,7 @@ final class AlchemyService {
                 continue;
             }
             List<UpgradeItemSources.SourceItem> candidates = UpgradeItemSources.find(wrapper, player,
-                    wrapper.getSourcePriority(), stack -> wrapper.getFilterLogic().stackMatchesFilter(stack, filter));
+                    wrapper.getSourcePriority(), stack -> wrapper.getFilterLogic().stackMatchesFilter(stack, filter), java.util.Optional.of(filter.getItem()), 1);
             for (UpgradeItemSources.SourceItem candidate : candidates) {
                 AlchemyItemDefinition definition = findDefinition(wrapper, player, filter, candidate.stack());
                 if (definition == null) {
@@ -64,6 +64,12 @@ final class AlchemyService {
                 }
                 ItemStack extracted = UpgradeItemSources.extract(wrapper, player, candidate, 1);
                 if (extracted.isEmpty()) {
+                    continue;
+                }
+                if (!rule.condition().test(player, rule.value())
+                        || (definition = findDefinition(wrapper, player, filter, extracted)) == null) {
+                    ItemStack remainder = UpgradeItemSources.returnToSource(wrapper, player, candidate, extracted);
+                    if (!remainder.isEmpty()) UpgradeItemSources.recover(wrapper, player, remainder);
                     continue;
                 }
                 ItemStack reserved = extracted.copyWithCount(1);

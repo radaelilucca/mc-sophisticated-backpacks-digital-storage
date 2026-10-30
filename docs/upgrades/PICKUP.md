@@ -57,3 +57,7 @@ Testes: ambas as prioridades, filtro recusado, nenhuma conexão, destinos parcia
 Em jogo: caminhar sobre drops nos três backends, slots nativos de mochila suportados, configurações de mochila vestida, múltiplas mochilas e Magnet junto. **Aceito quando** só a quantidade efetivamente aceita é encaminhada e o restante continua disponível ao fluxo original, sem depender da GUI.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

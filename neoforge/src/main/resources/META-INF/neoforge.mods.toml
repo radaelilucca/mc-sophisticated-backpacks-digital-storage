@@ -60,3 +60,10 @@ type="optional"
 versionRange="[2.4.2,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="scc"
+type="optional"
+versionRange="[1.5.3]"
+ordering="AFTER"
+side="BOTH"
