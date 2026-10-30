@@ -61,6 +61,23 @@ class DepositFilterTest extends MinecraftStorageTest {
         assertEquals(3, snapshot.insertItem(0, new ItemStack(Items.DIRT, 3), false).getCount());
     }
 
+    @Test
+    void manualContentSnapshotStaysFixedUntilNextRequest() {
+        var filters = filters();
+        var destination = new net.neoforged.neoforge.items.ItemStackHandler(2);
+        destination.setStackInSlot(0, new ItemStack(Items.STONE));
+        filters.setDepositFilterType(DepositFilterType.INVENTORY);
+        filters.setInventory(destination);
+        destination.setStackInSlot(1, new ItemStack(Items.DIRT));
+        assertTrue(filters.matchesFilter(new ItemStack(Items.STONE)));
+        assertFalse(filters.matchesFilter(new ItemStack(Items.DIRT)));
+        filters.setInventory(destination);
+        assertTrue(filters.matchesFilter(new ItemStack(Items.DIRT)));
+        destination.setStackInSlot(0, ItemStack.EMPTY);
+        filters.setInventory(destination);
+        assertFalse(filters.matchesFilter(new ItemStack(Items.STONE)));
+    }
+
     private static DepositFilterLogic filters() {
         return new DepositFilterLogic(new ItemStack(Items.STICK), ignored -> {}, 9, ModCoreDataComponents.FILTER_ATTRIBUTES);
     }

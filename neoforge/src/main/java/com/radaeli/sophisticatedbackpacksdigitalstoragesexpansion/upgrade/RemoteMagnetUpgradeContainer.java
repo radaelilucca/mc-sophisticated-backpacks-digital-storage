@@ -12,7 +12,7 @@ public final class RemoteMagnetUpgradeContainer
     public RemoteMagnetUpgradeContainer(Player player, int containerId, RemoteMagnetUpgradeWrapper wrapper,
             UpgradeContainerType<RemoteMagnetUpgradeWrapper, RemoteMagnetUpgradeContainer> type) {
         super(player, containerId, wrapper, type);
-        filterLogicContainer = new ContentsFilterLogicContainer(wrapper::getFilterLogic, this, slots::add);
+        filterLogicContainer = new ContentsFilterLogicContainer(() -> upgradeWrapper.getFilterLogic(), this, slots::add);
     }
 
     public ContentsFilterLogicContainer getFilterLogicContainer() {

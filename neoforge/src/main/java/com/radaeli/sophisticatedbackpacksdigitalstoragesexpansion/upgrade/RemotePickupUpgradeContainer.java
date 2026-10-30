@@ -12,7 +12,7 @@ public final class RemotePickupUpgradeContainer
     public RemotePickupUpgradeContainer(Player player, int containerId, RemotePickupUpgradeWrapper wrapper,
             UpgradeContainerType<RemotePickupUpgradeWrapper, RemotePickupUpgradeContainer> type) {
         super(player, containerId, wrapper, type);
-        filterLogicContainer = new ContentsFilterLogicContainer(wrapper::getFilterLogic, this, slots::add);
+        filterLogicContainer = new ContentsFilterLogicContainer(() -> upgradeWrapper.getFilterLogic(), this, slots::add);
     }
 
     public ContentsFilterLogicContainer getFilterLogicContainer() {

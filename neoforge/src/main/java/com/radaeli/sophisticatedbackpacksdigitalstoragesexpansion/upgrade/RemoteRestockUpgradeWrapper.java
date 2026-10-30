@@ -15,7 +15,7 @@ public final class RemoteRestockUpgradeWrapper extends LinkedStorageUpgradeWrapp
         super(storage, upgrade, saveHandler);
         filterLogic = new DepositFilterLogic(upgrade, saveHandler, RemoteRestockUpgradeItem.FILTER_SLOT_COUNT,
                 ModCoreDataComponents.FILTER_ATTRIBUTES);
-        filterLogic.setDepositFilterType(DepositFilterType.INVENTORY);
+        if (!upgrade.has(net.p3pp3rf1y.sophisticatedbackpacks.init.ModDataComponents.FILTER_BY_INVENTORY)) { filterLogic.setDepositFilterType(DepositFilterType.INVENTORY); }
     }
     @Override public DepositFilterLogic getFilterLogic() { return filterLogic; }
 }

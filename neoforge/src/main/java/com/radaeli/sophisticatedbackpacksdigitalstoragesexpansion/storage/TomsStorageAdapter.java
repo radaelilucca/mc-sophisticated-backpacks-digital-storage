@@ -52,6 +52,23 @@ public final class TomsStorageAdapter implements StorageAdapter {
         }
 
         @Override
+        public boolean hasStoredMatching(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+                java.util.Optional<net.minecraft.world.item.Item> item) {
+            Direction direction = switch (terminal.getBlockState().getValue(AbstractStorageTerminalBlock.TERMINAL_POS)) {
+                case UP -> Direction.UP;
+                case DOWN -> Direction.DOWN;
+                default -> terminal.getBlockState().getValue(AbstractStorageTerminalBlock.FACING);
+            };
+            NetworkInventory inventory = new NetworkInventory();
+            inventory.onLoad(terminalLevel, endpoint.pos().relative(direction), direction.getOpposite(), terminal);
+            inventory.scanNetwork(terminalLevel, endpoint.pos());
+            try (var stacks = inventory.getAccess(terminalLevel, endpoint.pos()).tracker().streamWrappedStacks(false)) {
+                return stacks.anyMatch(value -> value.getQuantity() > 0
+                        && item.map(value.getStack()::is).orElse(true) && matches.test(value.getStack()));
+            }
+        }
+
+        @Override
         public IItemHandler getAvailableItems(ServerPlayer player) {
             // getStacks() is a terminal GUI cache populated asynchronously after a read request.
             // Use Tom's native inventory view for a current snapshot on the first deposit too.

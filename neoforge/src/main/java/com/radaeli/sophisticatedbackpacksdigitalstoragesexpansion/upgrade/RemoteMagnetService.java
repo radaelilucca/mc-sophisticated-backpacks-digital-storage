@@ -65,9 +65,6 @@ final class RemoteMagnetService {
                 continue;
             }
             ItemStack offered = entity.getItem().copy();
-            if (!wrapper.getFilterLogic().matchesFilter(offered)) {
-                continue;
-            }
 
             ItemStack simulatedRemainder = route(wrapper, player, backpack, remote, offered.copy(), true);
             if (simulatedRemainder.getCount() >= offered.getCount()) {
@@ -101,13 +98,9 @@ final class RemoteMagnetService {
         if (offered.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        ItemStack remainder = offered.copy();
-        if (wrapper.getSourcePriority() == SourcePriority.NETWORK_FIRST) {
-            remainder = insertRemote(wrapper, player, remote, remainder, simulate);
-            return insertBackpack(backpack, remainder, simulate);
-        }
-        remainder = insertBackpack(backpack, remainder, simulate);
-        return insertRemote(wrapper, player, remote, remainder, simulate);
+        return DestinationItemFilter.route(wrapper.getSourcePriority(), offered,
+                stack -> insertRemote(wrapper, player, remote, stack, simulate),
+                stack -> insertBackpack(wrapper, backpack, stack, simulate));
     }
 
     private static ItemStack insertRemote(RemoteMagnetUpgradeWrapper wrapper, ServerPlayer player,
@@ -116,6 +109,7 @@ final class RemoteMagnetService {
             return offered;
         }
         try (StorageTransferGuard ignored = StorageTransferGuard.blockExternalInsertion(wrapper.getStorageWrapper())) {
+            if (!DestinationItemFilter.remote(wrapper.getFilterLogic(), remote, player, offered)) return offered;
             if (simulate) {
                 int accepted = ItemInsertion.acceptedCount(offered,
                         remote.simulateInsert(offered.copy(), player));
@@ -125,9 +119,9 @@ final class RemoteMagnetService {
         }
     }
 
-    private static ItemStack insertBackpack(IItemHandlerSimpleInserter backpack, ItemStack offered,
+    private static ItemStack insertBackpack(RemoteMagnetUpgradeWrapper wrapper, IItemHandlerSimpleInserter backpack, ItemStack offered,
             boolean simulate) {
-        return offered.isEmpty() ? ItemStack.EMPTY : backpack.insertItem(offered.copy(), simulate);
+        return DestinationItemFilter.local(wrapper.getFilterLogic(), offered) ? backpack.insertItem(offered.copy(), simulate) : offered;
     }
 
     /** Placed backpacks use native machine-movement tag semantics; carriers do not. */

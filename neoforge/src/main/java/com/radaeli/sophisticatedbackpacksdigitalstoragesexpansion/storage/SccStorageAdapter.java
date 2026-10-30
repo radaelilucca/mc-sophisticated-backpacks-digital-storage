@@ -38,6 +38,10 @@ public final class SccStorageAdapter implements StorageAdapter {
             return SccAccessPolicy.resolve(player, endpoint, origin,
                     operation == StorageOperation.INSERT ? SccSecurity.Right.PUT : SccSecurity.Right.TAKE).isPresent();
         }
+        public boolean hasStoredMatching(ServerPlayer player, Predicate<ItemStack> matches, Optional<Item> item) {
+            return !list(player, stack -> item.map(stack::is).orElse(true) && matches.test(stack),
+                    Optional.empty(), 1, null).isEmpty();
+        }
         public IItemHandler getAvailableItems(ServerPlayer player) {
             return new SnapshotItemHandler(list(player, stack -> true, Optional.empty(), Integer.MAX_VALUE, null)
                     .stream().map(StoredItemAmount::exemplar).toList());
@@ -69,6 +73,7 @@ public final class SccStorageAdapter implements StorageAdapter {
                             || result.stream().anyMatch(value -> ItemStack.isSameItemSameComponents(value.exemplar(), candidate))) continue;
                     if (right == null) {
                         result.add(new StoredItemAmount(candidate.copyWithCount(1), 1));
+                        if (needed == 1) return List.copyOf(result);
                         continue;
                     }
                     long free = network.free(StackKey.of(candidate));
