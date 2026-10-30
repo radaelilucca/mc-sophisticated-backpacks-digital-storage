@@ -114,6 +114,7 @@ public final class ForgeStorageGameTests {
     public static void prioritySettings(GameTestHelper helper) {
         PrioritySettingsTest tests = new PrioritySettingsTest();
         tests.priorityClickUpdatesDisplayedStateBeforePacketAndSurvivesReconstruction();
+        tests.feedingFilterUsesCurrentWrapperAfterSynchronizationAndPreservesListMode();
         tests.pickupAndMagnetBackpackFirstUseNativeInventoryBeforeNetworkInBothPhases();
         tests.storedContentStillRequiresLocalItemOrMemoryWithBackpackFirst();
         helper.succeed();

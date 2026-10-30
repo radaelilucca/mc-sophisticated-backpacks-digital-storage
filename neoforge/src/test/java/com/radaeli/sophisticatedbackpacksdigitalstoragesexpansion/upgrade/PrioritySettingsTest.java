@@ -62,6 +62,25 @@ public class PrioritySettingsTest {
     }
 
     @Test
+    public void feedingFilterUsesCurrentWrapperAfterSynchronizationAndPreservesListMode() {
+        ItemStack stack = new ItemStack(ModItems.REMOTE_FEEDING_UPGRADE.get());
+        var original = new RemoteFeedingUpgradeWrapper(null, stack, ignored -> {});
+        original.getFilterLogic().getFilterHandler().setStackInSlot(0, new ItemStack(Items.APPLE));
+        original.getFilterLogic().setAllowList(true);
+        var container = new RemoteFeedingUpgradeContainer(null, 0, original, null);
+        var synchronizedWrapper = new RemoteFeedingUpgradeWrapper(null, stack.copy(), ignored -> {});
+        synchronizedWrapper.getFilterLogic().setAllowList(false);
+        container.setUpgradeWrapper(synchronizedWrapper);
+        assertFalse(container.getFilterLogicContainer().isAllowList());
+        assertFalse(synchronizedWrapper.getFilterLogic().matchesFilter(new ItemStack(Items.APPLE)));
+        assertTrue(synchronizedWrapper.getFilterLogic().matchesFilter(new ItemStack(Items.BREAD)));
+        assertTrue(original.getFilterLogic().isAllowList());
+        var recreated = new RemoteFeedingUpgradeWrapper(null, synchronizedWrapper.getUpgradeStack().copy(), ignored -> {});
+        assertFalse(recreated.getFilterLogic().isAllowList());
+        assertEquals(Items.APPLE, recreated.getFilterLogic().getFilterHandler().getStackInSlot(0).getItem());
+    }
+
+    @Test
     public void pickupAndMagnetBackpackFirstUseNativeInventoryBeforeNetworkInBothPhases() {
         for (boolean magnet : new boolean[]{false, true}) {
             for (ContentsFilterType mode : ContentsFilterType.values()) {
