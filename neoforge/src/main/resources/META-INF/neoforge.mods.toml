@@ -64,6 +64,6 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="scc"
 type="optional"
-versionRange="[1.5.3]"
+versionRange="[1.5.3,)"
 ordering="AFTER"
 side="BOTH"

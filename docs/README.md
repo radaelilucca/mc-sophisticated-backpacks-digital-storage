@@ -1,5 +1,7 @@
 # Documentação
 
+Player guides: [Linking upgrades](player/linking.md), [Filters and source priority](player/filters.md), and the [Upgrade catalog](player/upgrades.md). For the English and Brazilian Portuguese guides, see the [documentation](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/).
+
 - [PRD do MVP](PRD.md) — requisitos, conectividade e critérios de aceitação para depósitos de mochila em sistemas de storage digital.
 - [Arquitetura implementada](ARCHITECTURE.md) — responsabilidades compartilhadas, contratos, proteções e estado atual da integração.
 - [Planos dos upgrades universais](UPGRADES.md) — premissas aprovadas, contratos, sequência e critérios de validação dos oito upgrades.

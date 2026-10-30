@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0] - 2026-10-30
+
+### Added
+
+- Added SCC 1.5.3 support for remote upgrades on NeoForge 1.21.1.
+
+### Fixed
+
+- Fixed Stored Content filters in Pickup and Magnet to match each destination independently.
+- Fixed upgrade filter settings being lost after synchronization.
+- Restored missing filter button icons.
+- Fixed source priority buttons to update immediately.
+- Restored the allowlist and blocklist selector in the Remote Feeding Upgrade.
+
 ## [0.2.0] - 2026-10-15
 
 ### Added
