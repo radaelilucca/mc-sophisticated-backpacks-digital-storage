@@ -1,12 +1,12 @@
-<p align="center" style="text-align: center;"><img src="https://raw.githubusercontent.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/main/docs/gallery/logo.png" alt="Sophisticated Backpacks - Digital Storages Expansion" width="200"></p>
+<p align="center" style="text-align: center;"><img src="https://raw.githubusercontent.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/main/docs/gallery/logo-scc.png" alt="Sophisticated Backpacks - Digital Storages Expansion" width="200"></p>
 
-<p align="center" style="text-align: center;">Connect your Sophisticated Backpack to <b>Applied Energistics 2, Refined Storage, or Tom's Simple Storage</b></p>
+<p align="center" style="text-align: center;">Connect your Sophisticated Backpack to <b>Applied Energistics 2, Refined Storage, Tom's Simple Storage, and Super Cool Calculator</b></p>
 
 <p align="center" style="background-color: #F4ECD0; text-align: center;"><img src="https://raw.githubusercontent.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/main/docs/gallery/section-titles/what_it_is.png" alt="WHAT IT IS?" width="267"></p>
 
-Your backpack can do more than carry supplies. **Digital Storages Expansion** adds eight upgrades that connect Sophisticated Backpacks to digital storage networks, so you can send items away, restock, and use supplies from your network while you play.
+Your backpack can do more than carry supplies. **Digital Storage Expansion** adds eight upgrades that connect Sophisticated Backpacks to digital storage networks, so you can send items away, restock, and use network supplies while you play.
 
-Each upgrade links to a storage block in your network and follows that network's access and range rules. The addon adds upgrades for item transfers and fluid transfers; it does not add a storage network of its own.
+Each upgrade links to one network endpoint and follows that network's access and range rules. The addon adds item and fluid transfers; it does not add a storage network of its own.
 
 ---
 
@@ -75,18 +75,18 @@ Each upgrade links to a storage block in your network and follows that network's
 **Move filtered fluids between containers, nearby tanks or world fluids and your linked network or backpack tank.**
 
 - Choose the transfer direction and which storage to use first.
-- Supports fluid transfers with **Applied Energistics 2** and **Refined Storage**. Tom's Simple Storage does not support fluid transfers.
+- Supports fluid transfers with **Applied Energistics 2**, **Refined Storage**, and **Super Cool Calculator**. Tom's Simple Storage is item-only.
 
 ---
 
 <p align="center" style="background-color: #F4ECD0; text-align: center;"><img src="https://raw.githubusercontent.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/main/docs/gallery/section-titles/how-do-i-use-it.png" alt="HOW DO I USE IT?" width="371"></p>
 
-1. Hold a Remote Upgrade and **Shift-right-click a compatible storage block** to link it. Use an **ME Wireless Access Point** for Applied Energistics 2, a **Controller** for Refined Storage, or a **Storage Terminal** for Tom's Simple Storage.
+1. Hold a Remote Upgrade and **Shift-right-click a compatible network block** to link it. Use an **ME Wireless Access Point** for Applied Energistics 2, a **Controller** for Refined Storage, a **Storage Terminal** for Tom's Simple Storage, or a **Network Antenna** for Super Cool Calculator.
 2. Place the linked upgrade in a backpack upgrade slot and open its tab to configure filters, priorities, or transfer settings.
 3. Craft each Remote Upgrade from its matching advanced Sophisticated Backpacks upgrade, **3 diamonds**, **2 Ender Pearls**, and **2 redstone dust**.
 4. To change networks, link the upgrade to another compatible block. To remove its link while keeping its settings, place the upgrade by itself in a crafting grid.
 
-> **Heads up:** Remote access follows your network's own range and access rules, including its wireless setup. **Remote Pump** transfers fluids only with Applied Energistics 2 and Refined Storage; Tom's Simple Storage is item-only.
+> **Heads up:** Remote access follows your network's range and access rules, including its wireless setup. **Remote Pump** supports fluids with Applied Energistics 2, Refined Storage, and Super Cool Calculator. Tom's Simple Storage is item-only.
 
 These upgrades do not create wireless access or bypass your storage network's permissions and range.
 
@@ -99,7 +99,9 @@ Install the mod on **both the client and server**.
 - **Minecraft 1.21.1 · NeoForge 21.1.236+** — Sophisticated Backpacks 3.26.3+ and Sophisticated Core 1.5.1+.
 - **Minecraft 1.20.1 · Forge 47.4.10+** — Sophisticated Backpacks 3.26.12+ and Sophisticated Core 1.5.10+.
 
-Storage systems are optional. Install the matching version for your Minecraft and loader: **Applied Energistics 2** (19.2.18+ on NeoForge; 15.4.11 on Forge), **Refined Storage** (2.0.9+ on NeoForge; 1.12.4 on Forge), or **Tom's Simple Storage** (2.4.2+ on NeoForge; 1.7.1 on Forge). You can use more than one storage mod; each upgrade keeps the network you link it to.
+Connect each upgrade to the network you use: **Applied Energistics 2** (19.2.18+ on NeoForge; 15.4.11 on Forge), **Refined Storage** (2.0.9+ on NeoForge; 1.12.4 on Forge), **Tom's Simple Storage** (2.4.2+ on NeoForge; 1.7.1 on Forge), or **Super Cool Calculator** (1.5.3+ on NeoForge 1.21.1). You can use more than one network; each upgrade keeps the network you link it to.
+
+For full setup instructions, filter behavior, and upgrade details, see the [documentation](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/): [linking](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/player/linking), [filters and source priority](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/player/filters), and the [upgrade catalog](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/player/upgrades).
 
 ---
 
@@ -115,4 +117,4 @@ Storage systems are optional. Install the matching version for your Minecraft an
 
 ---
 
-*For development notes, see the [technical documentation](https://github.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/blob/main/docs/README.md). See the [changelog](https://github.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/blob/main/CHANGELOG.md) for project updates.*
+*For player guides in English and Brazilian Portuguese, see the [documentation](https://mods.radaeli.dev/en/mods/sophisticated-backpack-is-addon/). For development notes, see the [technical documentation](https://github.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/blob/main/docs/README.md); for project updates, see the [changelog](https://github.com/radaelilucca/mc-sophisticated-backpacks-digital-storage/blob/main/CHANGELOG.md).*
