@@ -16,7 +16,7 @@ public final class RemoteFeedingUpgradeContainer
     public RemoteFeedingUpgradeContainer(Player player, int containerId, RemoteFeedingUpgradeWrapper wrapper,
             UpgradeContainerType<RemoteFeedingUpgradeWrapper, RemoteFeedingUpgradeContainer> type) {
         super(player, containerId, wrapper, type);
-        filterLogicContainer = new FilterLogicContainer<>(wrapper::getFilterLogic, this, slots::add);
+        filterLogicContainer = new FilterLogicContainer<>(() -> upgradeWrapper.getFilterLogic(), this, slots::add);
     }
 
     public FilterLogicContainer<FilterLogic> getFilterLogicContainer() {

@@ -63,3 +63,7 @@ Testes: inserção/substituição/remoção/reabertura do filtro; cada condiçã
 Em jogo: fogo, submersão, ferimento e efeito negativo; poções e outros consumíveis definidos nativamente; perda de conexão após reserva; remoção, desabilitação, morte e reinício durante uso; Feeding junto. **Aceito quando** somente o portador é afetado, duração nativa é respeitada e nenhuma aplicação/reserva é duplicada.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

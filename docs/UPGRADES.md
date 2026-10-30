@@ -68,6 +68,8 @@ Pickup e Magnet selecionam destino; Refill, Feeding e Alchemy selecionam fonte. 
 
 Sem conexão ou permissão para a rede, o caminho local pode funcionar nas funções compatíveis. Falta de vínculo também não deve ampliar acesso remoto. Pump vinculado a backend sem fluidos pausa toda a função e mostra incompatibilidade, mesmo com tanque local.
 
+Prioridade não substitui o filtro de cada destino. Em Pickup/Magnet com `Stored content`, Mochila primeiro aceita localmente somente itens presentes na mochila ou aprovados pela memória nativa; espaço livre sozinho não aprova um item. Se apenas a rede contiver o item, ele segue para a rede. Essa regra foi reconfirmada pelo usuário em 2026-10-30. O botão compartilhado atualiza o wrapper local imediatamente, como os controles Sophisticated, e envia o valor escolhido ao servidor; a operação continua sujeita à validação server-side de P04.
+
 Deposit e Restock têm direção fixa e não exibem prioridade: mochila → rede e rede → mochila, respectivamente. Não há interação de transferência por Shift + clique em containers externos nesta etapa.
 
 <a id="P06"></a>
@@ -191,3 +193,7 @@ Etapas 2 e 3 dependem da fundação; Magnet reutiliza o roteamento do Pickup; Re
 - [ ] Single player e servidor dedicado, com prova manual registrada por função/backend.
 
 Manter a arquitetura sincronizada com o código. A implementação foi compilada e carregada no cliente; os cenários deste documento continuam sendo critérios de validação, não resultados presumidos.
+
+## SCC 1.5.3
+
+NeoForge now includes SCC for all eight universal paths (Pump: fluids without added components). Follow P02–P12 and [SCC phases](integrations/SCC.md); no SCC runtime gate is marked complete. Forge remains on its existing backends.

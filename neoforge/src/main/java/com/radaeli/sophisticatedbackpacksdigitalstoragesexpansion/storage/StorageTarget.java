@@ -9,6 +9,29 @@ import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.storage.Storag
 public interface StorageTarget {
     StorageEndpoint endpoint();
 
+    /** Presence does not require extraction rights or an extraction simulation. */
+    default boolean hasStoredMatching(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+            java.util.Optional<net.minecraft.world.item.Item> item) {
+        IItemHandler contents = getAvailableItems(player);
+        for (int slot = 0; slot < contents.getSlots(); slot++) {
+            ItemStack stack = contents.getStackInSlot(slot);
+            if (!stack.isEmpty() && item.map(stack::is).orElse(true) && matches.test(stack)) return true;
+        }
+        return false;
+    }
+
+    default boolean canBind(ServerPlayer player, SourceLocation source) {
+        return canAccess(player, source, StorageOperation.INSERT);
+    }
+
+    default List<StoredItemAmount> queryItems(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+            java.util.Optional<net.minecraft.world.item.Item> item, int needed) {
+        if (needed <= 0) return List.of();
+        return getAvailableItemAmounts(player).stream()
+                .filter(value -> item.map(type -> value.exemplar().is(type)).orElse(true))
+                .filter(value -> matches.test(value.exemplar())).toList();
+    }
+
     boolean isReachable(ServerPlayer player, SourceLocation source);
 
     IItemHandler getAvailableItems(ServerPlayer player);

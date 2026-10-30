@@ -14,26 +14,25 @@ public final class DepositService {
     }
 
     public static void deposit(UpgradeOperationContext context, Optional<StorageEndpoint> endpoint, DepositFilterLogic filters) {
-        StorageConnection connection = StorageAdapterRegistry.connect(context.player(), endpoint, context.source());
-        if (connection.target().isEmpty()) {
-            context.player().displayClientMessage(Component.translatable(connection.status().messageKey()), true);
-            return;
-        }
+        try (StorageTransferGuard operationGuard = StorageTransferGuard.blockExternalInsertion(context.storage())) {
+            StorageConnection connection = StorageAdapterRegistry.connect(context.player(), endpoint, context.source());
+            if (connection.target().isEmpty()) {
+                context.player().displayClientMessage(Component.translatable(connection.status().messageKey()), true);
+                return;
+            }
 
-        StorageTarget target = connection.target().get();
-        if (filters.getDepositFilterType() == DepositFilterType.INVENTORY) {
-            // A potentially large network snapshot is needed only for the native inventory matching mode.
-            filters.setInventory(target.getAvailableItems(context.player()));
-        }
+            StorageTarget target = connection.target().get();
+            if (filters.getDepositFilterType() == DepositFilterType.INVENTORY) {
+                // A potentially large network snapshot is needed only for the native inventory matching mode.
+                filters.setInventory(target.getAvailableItems(context.player()));
+            }
 
-        ItemTransferService.TransferResult result;
-        try (StorageTransferGuard ignored = StorageTransferGuard.blockExternalInsertion(context.storage())) {
-            result = ItemTransferService.deposit(context.storage().getInventoryForUpgradeProcessing(),
-                    target.insertionFor(context.player()), filters::matchesFilter,
-                    context.player().getInventory()::placeItemBackInInventory);
+            ItemTransferService.TransferResult result = ItemTransferService.deposit(context.storage().getInventoryForUpgradeProcessing(),
+                        target.insertionFor(context.player()), filters::matchesFilter,
+                        context.player().getInventory()::placeItemBackInInventory);
+            context.player().displayClientMessage(Component.translatable(result.movedAnything()
+                    ? "message.sophisticated_backpacks_digital_storages_expansion.deposited"
+                    : "message.sophisticated_backpacks_digital_storages_expansion.nothing_to_deposit", result.movedStacks()), true);
         }
-        context.player().displayClientMessage(Component.translatable(result.movedAnything()
-                ? "message.sophisticated_backpacks_digital_storages_expansion.deposited"
-                : "message.sophisticated_backpacks_digital_storages_expansion.nothing_to_deposit", result.movedStacks()), true);
     }
 }

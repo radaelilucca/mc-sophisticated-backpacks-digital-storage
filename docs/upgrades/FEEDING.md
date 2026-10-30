@@ -29,6 +29,8 @@ Aplicar [P02 — vínculo e receita compartilhada de desvínculo](../UPGRADES.md
 - Recipientes: tentar rede com permissão de inserção própria, depois mochila e recuperação nativa do jogador. Nunca desfazer alimentação já concluída por falha de retorno.
 - Container/aba: controles nativos de fome/filtros/ferimento, prioridade e vínculo. Sem botão de consumir ou Mixin específico.
 
+**Seletor de filtros (2026-10-30, P05/P06/P11):** Forge e NeoForge expõem `MatchButton.ALLOW_LIST` no próprio `FilterLogicControl`, com sprites, estados, tooltips e pacote nativos de lista permitida/bloqueada. Lista permitida aceita somente alimentos que correspondam aos filtros; lista bloqueada exclui os correspondentes. O modo salvo é preservado, inclusive ao copiar/reinstalar o upgrade. O container consulta o wrapper atual após sincronização, e fome/ferimento/prioridade/vínculo ficam abaixo da altura real do controle, acomodando a nova linha sem sobreposição. O botão compartilhado de prioridade atualiza o estado local antes de enviar o valor capturado ao servidor, conforme [P05](../UPGRADES.md#P05). Validação visual e alimentação em jogo continuam pendentes (P12).
+
 ## 5. Fluxo operacional
 
 1. No tick elegível, validar portador, habilitação e cooldown; resolver pendências anteriores.
@@ -60,3 +62,7 @@ Testes: limiares, ferimento, filtros, comidas com componentes/efeitos, item não
 Em jogo: alimentos comuns e com recipientes, rede somente com extração permitida, perda de alcance, inventário cheio e Feeding junto com Alchemy. **Aceito quando** o portador é alimentado sob condições configuradas, efeitos são preservados e não há consumo/restituição dupla.
 
 [Critérios comuns](../UPGRADES.md#P12) · [Voltar ao catálogo](../UPGRADES.md)
+
+## SCC integration
+
+The NeoForge path includes SCC 1.5.3 through the shared adapters. Follow the function-specific phase and acceptance criteria in [SCC integration](../integrations/SCC.md), together with P02–P12. Implementation is present; network/GUI/runtime acceptance remains pending. Pump remote support is limited to fluids without added components.

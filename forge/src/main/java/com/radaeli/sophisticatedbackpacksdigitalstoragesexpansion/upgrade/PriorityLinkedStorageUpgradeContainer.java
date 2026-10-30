@@ -27,10 +27,12 @@ public abstract class PriorityLinkedStorageUpgradeContainer<W extends PriorityLi
     }
 
     public final void toggleSourcePriority() {
+        SourcePriority priority = getSourcePriority().next();
+        // Follow native controls: update the client wrapper before sending the selected value.
+        upgradeWrapper.setSourcePriority(priority);
         sendDataToServer(() -> {
             CompoundTag data = new CompoundTag();
-            data.putBoolean(DATA_SOURCE_PRIORITY,
-                    getSourcePriority() != SourcePriority.BACKPACK_FIRST);
+            data.putBoolean(DATA_SOURCE_PRIORITY, priority == SourcePriority.BACKPACK_FIRST);
             return data;
         });
     }

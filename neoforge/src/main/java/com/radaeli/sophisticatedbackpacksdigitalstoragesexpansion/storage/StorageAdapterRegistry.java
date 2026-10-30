@@ -24,6 +24,11 @@ public final class StorageAdapterRegistry {
         private static Map<String, StorageAdapter> create() {
             Map<String, StorageAdapter> adapters = new LinkedHashMap<>();
             // Keep construction inside each loaded-mod branch: optional classes must not load eagerly.
+            // SCC's AE2-compatible antenna also implements IWirelessAccessPoint.
+            // Identify its native backend before the generic AE2 interface matches it.
+            if (ModList.get().isLoaded("scc")) {
+                register(adapters, new SccStorageAdapter());
+            }
             if (ModList.get().isLoaded("ae2")) {
                 register(adapters, new Ae2StorageAdapter());
             }
@@ -77,6 +82,14 @@ public final class StorageAdapterRegistry {
 
     public static StorageConnection connect(ServerPlayer player, StorageEndpoint endpoint, SourceLocation source,
             StorageOperation operation) {
+        return connect(player, endpoint, source, operation, false);
+    }
+
+    public static StorageConnection connectForBinding(ServerPlayer player, StorageEndpoint endpoint, SourceLocation source) {
+        return connect(player, endpoint, source, StorageOperation.INSERT, true);
+    }
+
+    private static StorageConnection connect(ServerPlayer player, StorageEndpoint endpoint, SourceLocation source, StorageOperation operation, boolean binding) {
         StorageAdapter adapter = InstalledAdapters.ALL.get(endpoint.backendId());
         if (adapter == null) {
             return StorageConnection.unavailable(Status.BACKEND_MISSING);
@@ -92,11 +105,11 @@ public final class StorageAdapterRegistry {
         if (!level.mayInteract(player, endpoint.pos())) {
             return StorageConnection.unavailable(Status.ACCESS_DENIED);
         }
-        Optional<StorageTarget> target = adapter.resolve(level, endpoint);
+        Optional<StorageTarget> target = adapter.resolve(level, endpoint, source);
         if (target.isEmpty()) {
             return StorageConnection.unavailable(Status.ENDPOINT_MISSING);
         }
-        return target.filter(value -> value.canAccess(player, source, operation))
+        return target.filter(value -> (binding ? value.canBind(player, source) : value.canAccess(player, source, operation)))
                 .map(StorageConnection::connected)
                 .orElseGet(() -> StorageConnection.unavailable(Status.UNAVAILABLE));
     }

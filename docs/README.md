@@ -15,3 +15,5 @@
 - [Feeding](upgrades/FEEDING.md) — alimentação automática do portador.
 - [Alchemy](upgrades/ALCHEMY.md) — consumíveis condicionais para o portador.
 - [Pump](upgrades/PUMP.md) — transferência de fluidos com suporte por capacidade.
+
+- [SCC integration](integrations/SCC.md) — audited APIs, implementation phases and pending runtime matrix.

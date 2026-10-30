@@ -68,6 +68,21 @@ public final class Ae2StorageAdapter implements StorageAdapter {
         }
 
         @Override
+        public boolean hasStoredMatching(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+                java.util.Optional<net.minecraft.world.item.Item> item) {
+            return storage().map(storage -> {
+                var counter = storage.getAvailableStacks();
+                for (var key : counter.keySet()) {
+                    if (key instanceof AEItemKey itemKey && counter.get(key) > 0) {
+                        ItemStack stack = itemKey.toStack(1);
+                        if (item.map(stack::is).orElse(true) && matches.test(stack)) return true;
+                    }
+                }
+                return false;
+            }).orElse(false);
+        }
+
+        @Override
         public IItemHandler getAvailableItems(ServerPlayer player) {
             List<ItemStack> items = new ArrayList<>();
             storage().ifPresent(meStorage -> {

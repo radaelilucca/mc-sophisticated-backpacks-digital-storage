@@ -64,6 +64,18 @@ public final class RefinedStorageAdapter implements StorageAdapter {
         }
 
         @Override
+        public boolean hasStoredMatching(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+                java.util.Optional<net.minecraft.world.item.Item> item) {
+            INetwork network = network();
+            if (network == null) return false;
+            for (var entry : network.getItemStorageCache().getList().getStacks()) {
+                ItemStack stack = entry.getStack();
+                if (!stack.isEmpty() && item.map(stack::is).orElse(true) && matches.test(stack)) return true;
+            }
+            return false;
+        }
+
+        @Override
         public IItemHandler getAvailableItems(ServerPlayer player) {
             List<ItemStack> items = new ArrayList<>();
             INetwork network = network();

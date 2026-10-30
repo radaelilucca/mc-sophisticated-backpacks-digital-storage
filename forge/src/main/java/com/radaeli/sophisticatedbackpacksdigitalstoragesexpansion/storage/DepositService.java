@@ -21,13 +21,13 @@ public final class DepositService {
         }
 
         StorageTarget target = connection.target().get();
-        if (filters.getDepositFilterType() == DepositFilterType.INVENTORY) {
-            // A potentially large network snapshot is needed only for the native inventory matching mode.
-            filters.setInventory(target.getAvailableItems(context.player()));
-        }
-
         ItemTransferService.TransferResult result;
         try (StorageTransferGuard ignored = StorageTransferGuard.blockExternalInsertion(context.storage())) {
+            if (filters.getDepositFilterType() == DepositFilterType.INVENTORY) {
+                // A potentially large network snapshot is needed only for the native inventory matching mode.
+                filters.setInventory(target.getAvailableItems(context.player()));
+            }
+
             result = ItemTransferService.deposit(context.storage().getInventoryForUpgradeProcessing(),
                     target.insertionFor(context.player()), filters::matchesFilter,
                     context.player().getInventory()::placeItemBackInInventory);

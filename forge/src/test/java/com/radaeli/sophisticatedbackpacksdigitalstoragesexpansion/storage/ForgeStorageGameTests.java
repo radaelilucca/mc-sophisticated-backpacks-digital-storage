@@ -3,6 +3,7 @@ package com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.storage;
 import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.SophisticatedBackpacksDigitalStoragesExpansion;
 import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.upgrade.PumpWorldTargetsTest;
 import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.upgrade.RemotePumpUpgradeWrapperTest;
+import com.radaeli.sophisticatedbackpacksdigitalstoragesexpansion.upgrade.PrioritySettingsTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
@@ -106,6 +107,16 @@ public final class ForgeStorageGameTests {
         tests.everyNativeBackpackTierCanTransferAWholeBucketWithoutATank();
         tests.reservationSurvivesItemCopyWithNbtAndBlocksUnlinking();
         tests.nativePlacedBackpackClassLoadsWithTheFluidCapabilityMixin();
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void prioritySettings(GameTestHelper helper) {
+        PrioritySettingsTest tests = new PrioritySettingsTest();
+        tests.priorityClickUpdatesDisplayedStateBeforePacketAndSurvivesReconstruction();
+        tests.feedingFilterUsesCurrentWrapperAfterSynchronizationAndPreservesListMode();
+        tests.pickupAndMagnetBackpackFirstUseNativeInventoryBeforeNetworkInBothPhases();
+        tests.storedContentStillRequiresLocalItemOrMemoryWithBackpackFirst();
         helper.succeed();
     }
 

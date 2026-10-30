@@ -13,4 +13,8 @@ public interface StorageAdapter {
     Optional<StorageEndpoint> identify(Level level, BlockPos pos);
 
     Optional<StorageTarget> resolve(ServerLevel level, StorageEndpoint endpoint);
+
+    default Optional<StorageTarget> resolve(ServerLevel level, StorageEndpoint endpoint, SourceLocation source) {
+        return resolve(level, endpoint);
+    }
 }

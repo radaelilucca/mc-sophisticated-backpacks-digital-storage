@@ -34,7 +34,7 @@ public final class RemotePickupUpgradeWrapper extends PriorityLinkedStorageUpgra
 
     @Override
     public ItemStack pickup(Level level, ItemStack offered, boolean simulate) {
-        if (level.isClientSide || offered.isEmpty() || !isEnabled() || !filterLogic.matchesFilter(offered)) {
+        if (level.isClientSide || offered.isEmpty() || !isEnabled()) {
             return offered;
         }
         return RemotePickupContext.current()

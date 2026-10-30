@@ -41,7 +41,7 @@ final class RefillService {
                 continue;
             }
             List<UpgradeItemSources.SourceItem> sources = UpgradeItemSources.find(wrapper, player,
-                    wrapper.getSourcePriority(), candidate -> filters.stackMatchesFilter(candidate, filter));
+                    wrapper.getSourcePriority(), candidate -> filters.stackMatchesFilter(candidate, filter), java.util.Optional.empty(), destination.missing());
             for (UpgradeItemSources.SourceItem source : sources) {
                 int requested = (int) Math.min(destination.missing(), Math.min(source.amount(), Integer.MAX_VALUE));
                 if (requested <= 0) {
@@ -102,7 +102,7 @@ final class RefillService {
 
         int requested = missing;
         List<UpgradeItemSources.SourceItem> sources = UpgradeItemSources.find(wrapper, serverPlayer,
-                wrapper.getSourcePriority(), candidate -> ItemStack.isSameItemSameComponents(candidate, picked));
+                wrapper.getSourcePriority(), candidate -> ItemStack.isSameItemSameComponents(candidate, picked), java.util.Optional.of(picked.getItem()), missing);
         for (UpgradeItemSources.SourceItem source : sources) {
             ItemStack extracted = UpgradeItemSources.extract(wrapper, serverPlayer, source, requested);
             if (extracted.isEmpty()) {

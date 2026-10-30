@@ -35,6 +35,11 @@ public final class RestockService {
                 if (estimate <= 0) continue;
                 ItemStack extracted = target.extract(exemplar, estimate, context.player());
                 if (extracted.isEmpty()) continue;
+                if (!ItemStack.isSameItemSameComponents(exemplar, extracted)
+                        || !wrapper.getFilterLogic().matchesFilter(extracted)) {
+                    recover(context, target, extracted);
+                    continue;
+                }
                 ItemStack remainder = insert(backpack, extracted.copy());
                 moved += extracted.getCount() - remainder.getCount();
                 if (!remainder.isEmpty()) recover(context, target, remainder);

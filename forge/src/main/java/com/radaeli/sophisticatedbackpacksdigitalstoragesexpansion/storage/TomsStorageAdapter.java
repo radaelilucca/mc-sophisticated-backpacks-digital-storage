@@ -54,6 +54,17 @@ public final class TomsStorageAdapter implements StorageAdapter {
 
         @Override public boolean isReachable(ServerPlayer player, SourceLocation source) { return allowed(player); }
 
+        @Override public boolean hasStoredMatching(ServerPlayer player, java.util.function.Predicate<ItemStack> matches,
+                java.util.Optional<net.minecraft.world.item.Item> item) {
+            return handler(player).map(inventory -> {
+                for (int slot = 0; slot < inventory.getSlots(); slot++) {
+                    ItemStack stack = inventory.getStackInSlot(slot);
+                    if (!stack.isEmpty() && item.map(stack::is).orElse(true) && matches.test(stack)) return true;
+                }
+                return false;
+            }).orElse(false);
+        }
+
         @Override public IItemHandler getAvailableItems(ServerPlayer player) {
             List<ItemStack> items = new ArrayList<>();
             handler(player).ifPresent(inventory -> {

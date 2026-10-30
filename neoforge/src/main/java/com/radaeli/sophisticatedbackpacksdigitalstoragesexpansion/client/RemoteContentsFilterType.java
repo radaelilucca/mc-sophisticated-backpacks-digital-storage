@@ -14,13 +14,13 @@ import net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterType;
 final class RemoteContentsFilterType {
     static final ButtonDefinition.Toggle<ContentsFilterType> DEFINITION = ButtonDefinitions.createToggleButtonDefinition(Map.of(
             ContentsFilterType.ALLOW,
-            GuiHelper.getButtonStateData(new UV(128, 48), Dimension.SQUARE_16, new Position(1, 1),
+            GuiHelper.getButtonStateData(new UV(0, 0), Dimension.SQUARE_16, new Position(1, 1),
                     Component.translatable("gui.sophisticated_backpacks_digital_storages_expansion.filter.allow")),
             ContentsFilterType.BLOCK,
-            GuiHelper.getButtonStateData(new UV(144, 48), Dimension.SQUARE_16, new Position(1, 1),
+            GuiHelper.getButtonStateData(new UV(16, 0), Dimension.SQUARE_16, new Position(1, 1),
                     Component.translatable("gui.sophisticated_backpacks_digital_storages_expansion.filter.block")),
             ContentsFilterType.STORAGE,
-            GuiHelper.getButtonStateData(new UV(160, 48), Dimension.SQUARE_16, new Position(1, 1),
+            GuiHelper.getButtonStateData(new UV(64, 16), Dimension.SQUARE_16, new Position(1, 1),
                     Component.translatable("gui.sophisticated_backpacks_digital_storages_expansion.filter.storage"))));
 
     private RemoteContentsFilterType() {

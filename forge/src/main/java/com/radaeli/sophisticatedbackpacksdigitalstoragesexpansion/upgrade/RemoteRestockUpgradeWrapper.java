@@ -13,7 +13,7 @@ public final class RemoteRestockUpgradeWrapper extends LinkedStorageUpgradeWrapp
     public RemoteRestockUpgradeWrapper(IStorageWrapper storage, ItemStack upgrade, Consumer<ItemStack> saveHandler) {
         super(storage, upgrade, saveHandler);
         filterLogic = new DepositFilterLogic(upgrade, saveHandler, RemoteRestockUpgradeItem.FILTER_SLOT_COUNT);
-        filterLogic.setDepositFilterType(DepositFilterType.INVENTORY);
+        if (!upgrade.hasTag() || !upgrade.getTag().contains("filterByInventory")) { filterLogic.setDepositFilterType(DepositFilterType.INVENTORY); }
     }
     @Override public DepositFilterLogic getFilterLogic() { return filterLogic; }
 }
