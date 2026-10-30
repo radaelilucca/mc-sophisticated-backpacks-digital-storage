@@ -8,6 +8,4 @@ Every remote upgrade stores its own link to one network endpoint. All eight upgr
 
 To change networks, link the upgrade to another compatible endpoint. To remove the link while keeping its settings, craft the upgrade by itself. These actions require player interaction permission and network access. The addon follows the network's own availability, wireless range, and permission rules; it does not create wireless access.
 
-SCC support requires version 1.5.3 or newer; full in-game validation is still pending.
-
 An upgrade with items or fluids pending recovery cannot be relinked or unlinked until they are recovered.
