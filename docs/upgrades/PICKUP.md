@@ -6,6 +6,8 @@ Adicionar `remote_pickup_upgrade`. Ao caminhar sobre um drop, encaminhar itens f
 
 O upgrade responde à coleta normal, sem procurar entidades próximas. Respeitar quais mochilas o Sophisticated considera elegíveis e sua ordem de processamento.
 
+Mochila primeiro mantém o filtro de cada destino, conforme [P05](../UPGRADES.md#P05): em `Stored content`, a mochila precisa já conter o item ou aprová-lo pela memória nativa. Item existente somente na rede segue para ela, mesmo com espaço livre local. Regra reconfirmada em 2026-10-30. O controle compartilhado atualiza o estado local antes de enviar a prioridade selecionada ao servidor, seguindo o padrão nativo (P06/P11).
+
 ## 2. Premissas aplicáveis
 
 [P03 — infraestrutura](../UPGRADES.md#P03), [P04 — contexto](../UPGRADES.md#P04), [P05 — prioridade](../UPGRADES.md#P05), [P06 — instalação](../UPGRADES.md#P06), [P08 — simulação](../UPGRADES.md#P08) e [P10 — ciclos](../UPGRADES.md#P10). Seguir [P02](../UPGRADES.md#P02), [P07](../UPGRADES.md#P07) e [P11](../UPGRADES.md#P11).

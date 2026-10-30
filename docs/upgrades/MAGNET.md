@@ -6,6 +6,8 @@ Adicionar `remote_magnet_upgrade`. Procurar drops próximos à origem e encaminh
 
 Alcance de atração e conexão sem fio são independentes: um drop dentro da atração não concede acesso remoto. Usar alcance, limites e cooldowns do Magnet avançado nativo.
 
+Mochila primeiro mantém o filtro de cada destino, conforme [P05](../UPGRADES.md#P05): em `Stored content`, a mochila precisa já conter o item ou aprová-lo pela memória nativa. Item existente somente na rede segue para ela, mesmo com espaço livre local. Regra reconfirmada em 2026-10-30. O controle compartilhado atualiza o estado local antes de enviar a prioridade selecionada ao servidor, seguindo o padrão nativo (P06/P11).
+
 ## 2. Premissas aplicáveis
 
 [P03 — alcance](../UPGRADES.md#P03), [P04 — automação](../UPGRADES.md#P04), [P05 — prioridade](../UPGRADES.md#P05), [P06 — reaproveitamento](../UPGRADES.md#P06), [P08 — quantidades reais](../UPGRADES.md#P08), [P10 — ciclos](../UPGRADES.md#P10) e [P11 — desempenho](../UPGRADES.md#P11). Registro, vínculo e receita seguem [P02](../UPGRADES.md#P02) e [P07](../UPGRADES.md#P07).
